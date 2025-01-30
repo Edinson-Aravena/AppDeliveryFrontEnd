@@ -1,14 +1,15 @@
 import React from 'react'
-import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { globalColors } from '../../../config/theme/GlobalTheme';
 import { TitleComponent, IconComponent, InputComponent, RoundedButtonComponent } from '../../components';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../navigator/StackNavigator';
-
+import useViewModel from './ViewModel'
 
 export const RegisterScreen = () => {
 
+    const { names, surnames, email, phone, password, repeatPassword, onChange, register } = useViewModel();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     return (
@@ -38,77 +39,63 @@ export const RegisterScreen = () => {
                         style={{ color: globalColors.title, fontWeight: "bold", marginTop: 10 }}
                     />
 
-                    <View style={styles.formInput}>
-                        <IconComponent icon="person-outline" color={globalColors.buttons} size={40} />
+                    <InputComponent
+                        icon={'person-outline'}
+                        placeholder={'Nombres'}
+                        value={names}
+                        keyboardType={'default'}
+                        property='names'
+                        onChangeText={onChange}
+                    />
 
-                        <InputComponent
-                            placeholder='Nombres'
-                            size={15}
-                            style={{ flex: 1, borderBottomColor: '#EBEBEB', borderBottomWidth: 1 }}
-                            keyboardType='default'
-                        />
-                    </View>
+                    <InputComponent
+                        icon={'person-outline'}
+                        placeholder={'Apellidos'}
+                        value={surnames}
+                        keyboardType={'default'}
+                        property='surnames'
+                        onChangeText={onChange}
+                    />
 
-                    <View style={styles.formInput}>
-                        <IconComponent icon="person-outline" color={globalColors.buttons} size={40} />
+                    <InputComponent
+                        icon={'mail-outline'}
+                        placeholder={'Correo electrónico'}
+                        value={email}
+                        keyboardType={'email-address'}
+                        property='email'
+                        onChangeText={onChange}
+                    />
 
-                        <InputComponent
-                            placeholder='Apellidos'
-                            size={15}
-                            style={{ flex: 1, borderBottomColor: '#EBEBEB', borderBottomWidth: 1 }}
-                            keyboardType='default'
-                        />
-                    </View>
+                    <InputComponent
+                        icon={'call-outline'}
+                        placeholder={'Télefono'}
+                        value={phone}
+                        keyboardType={'numeric'}
+                        property='phone'
+                        onChangeText={onChange}
+                    />
 
-
-                    <View style={styles.formInput}>
-                        <IconComponent icon="mail-outline" color={globalColors.buttons} size={40} />
-
-                        <InputComponent
-                            placeholder='Correo electronico'
-                            size={15}
-                            style={{ flex: 1, borderBottomColor: '#EBEBEB', borderBottomWidth: 1 }}
-                            keyboardType='email-address'
-                        />
-                    </View>
-
-                    <View style={styles.formInput}>
-                        <IconComponent icon="call-outline" color={globalColors.buttons} size={40} />
-
-                        <InputComponent
-                            placeholder='Télefono'
-                            size={15}
-                            style={{ flex: 1, borderBottomColor: '#EBEBEB', borderBottomWidth: 1 }}
-                            keyboardType='numeric'
-                        />
-                    </View>
-
-                    <View style={styles.formInput}>
-                        <IconComponent icon="keypad-outline" color={globalColors.buttons} size={40} />
-
-                        <InputComponent
-                            placeholder='Contraseña'
-                            size={15}
-                            style={{ flex: 1, borderBottomColor: '#EBEBEB', borderBottomWidth: 1 }}
-                            keyboardType='default'
-                            secureTextEntry={true}
-                        />
-                    </View>
-
-                    <View style={styles.formInput}>
-                        <IconComponent icon="keypad-outline" color={globalColors.buttons} size={40} />
-
-                        <InputComponent
-                            placeholder='Confirmar Contraseña'
-                            size={15}
-                            style={{ flex: 1, borderBottomColor: '#EBEBEB', borderBottomWidth: 1 }}
-                            keyboardType='default'
-                            secureTextEntry={true}
-                        />
-                    </View>
+                    <InputComponent
+                        icon={'keypad-outline'}
+                        placeholder={'Contraseña'}
+                        value={password}
+                        keyboardType={'default'}
+                        property='password'
+                        onChangeText={onChange}
+                        secureTextEntry={true}
+                    />
+                    <InputComponent
+                        icon={'keypad-outline'}
+                        placeholder={'Confrimar Contraseña'}
+                        value={repeatPassword}
+                        keyboardType={'default'}
+                        property='repeatPassword'
+                        onChangeText={onChange}
+                        secureTextEntry={true}
+                    />
 
                     <View>
-                        <RoundedButtonComponent text='REGISTRARSE' onPress={() => ToastAndroid.show('Entrar', ToastAndroid.LONG)} />
+                        <RoundedButtonComponent text='REGISTRARSE' onPress={() => register()} />
                     </View>
 
                     <View style={styles.formRegister}>
@@ -145,10 +132,6 @@ const styles = StyleSheet.create({
     logoImage: {
         width: 100,
         height: 100,
-    },
-    formInput: {
-        flexDirection: 'row',
-        marginTop: 30,
     },
     formRegister: {
         flexDirection: 'row',

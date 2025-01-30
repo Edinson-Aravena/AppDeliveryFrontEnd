@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { LoginScreen } from '../screens/home/LoginScreen';
+import { LoginScreen } from '../screens/login/LoginScreen';
 import { RegisterScreen } from '../screens/register/RegisterScreen';
 
 export type RootStackParamList = {

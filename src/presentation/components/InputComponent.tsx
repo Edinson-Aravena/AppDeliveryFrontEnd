@@ -1,21 +1,51 @@
 import React from "react";
-import { TextInput, TextStyle, KeyboardTypeOptions } from "react-native";
+import { TextInput, TextStyle, KeyboardTypeOptions, View, StyleSheet } from "react-native";
+import { IconComponent } from "./IconComponent";
+import { globalColors } from "../../config/theme/GlobalTheme";
 
 interface InputProps {
+    icon: string;
     placeholder: string;
-    size?: number;
-    style?: TextStyle;
-    keyboardType?: KeyboardTypeOptions;
+    value: string;
+    keyboardType: KeyboardTypeOptions;
     secureTextEntry?: boolean;
+    property: string;
+    onChangeText: (property: string, value: any) => void;
 }
 
-export const InputComponent = ({ placeholder = "Default Placeholder", size = 25, style, keyboardType, secureTextEntry = false}: InputProps) => {
+export const InputComponent = ({
+    icon,
+    placeholder = "Default Placeholder",
+    value,
+    keyboardType,
+    secureTextEntry = false,
+    property,
+    onChangeText }: InputProps) => {
+
     return (
-        <TextInput
-            placeholder={placeholder}
-            style={[{ fontSize: size }, style]}
-            keyboardType={keyboardType}
-            secureTextEntry={secureTextEntry}
-        />
+        <View style={styles.formInput}>
+            <IconComponent icon={icon} color={globalColors.buttons} size={40} />
+            <TextInput
+                style={styles.formTextInput}
+                placeholder={placeholder}
+                keyboardType={keyboardType}
+                value={value}
+                onChangeText={text => onChangeText(property, text)}
+                secureTextEntry={secureTextEntry}
+            />
+        </View>
     );
 };
+
+
+const styles = StyleSheet.create({
+    formInput: {
+        flexDirection: 'row',
+        marginTop: 30,
+    },
+    formTextInput: {
+        flex: 1,
+        borderBottomWidth: 1,
+        borderBottomColor: globalColors.buttons
+    },
+})

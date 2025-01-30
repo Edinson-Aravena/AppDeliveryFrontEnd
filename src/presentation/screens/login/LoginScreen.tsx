@@ -1,12 +1,15 @@
-import React from 'react'
-import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react'
+import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { globalColors } from '../../../config/theme/GlobalTheme';
 import { TitleComponent, IconComponent, InputComponent, RoundedButtonComponent } from '../../components';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../navigator/StackNavigator';
+import useViewModel from './ViewModel'
 
 export const LoginScreen = () => {
+
+    const { email, password, onChange } = useViewModel();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -36,31 +39,30 @@ export const LoginScreen = () => {
                         style={{ color: globalColors.title, fontWeight: "bold", marginTop: 10 }}
                     />
 
-                    <View style={styles.formInput}>
-                        <IconComponent icon="mail-outline" color={globalColors.buttons} size={40} />
+                    <InputComponent
+                        icon={'mail-outline'}
+                        placeholder={'Correo electrónico'}
+                        value={email}
+                        keyboardType={'email-address'}
+                        property='email'
+                        onChangeText={onChange}
+                    />
 
-                        <InputComponent
-                            placeholder='Correo electronico'
-                            size={15}
-                            style={{ flex: 1, borderBottomColor: '#EBEBEB', borderBottomWidth: 1 }}
-                            keyboardType='email-address'
-                        />
-                    </View>
-
-                    <View style={styles.formInput}>
-                        <IconComponent icon="keypad-outline" color={globalColors.buttons} size={40} />
-
-                        <InputComponent
-                            placeholder='Contraseña'
-                            size={15}
-                            style={{ flex: 1, borderBottomColor: '#EBEBEB', borderBottomWidth: 1 }}
-                            keyboardType='default'
-                            secureTextEntry={true}
-                        />
-                    </View>
+                    <InputComponent
+                        icon={'keypad-outline'}
+                        placeholder={'Contraseña'}
+                        value={password}
+                        keyboardType={'default'}
+                        property='password'
+                        onChangeText={onChange}
+                        secureTextEntry={true}
+                    />
 
                     <View>
-                        <RoundedButtonComponent text='ENTRAR' onPress={() => ToastAndroid.show('Entrar', ToastAndroid.LONG)} />
+                        <RoundedButtonComponent text='ENTRAR' onPress={() => {
+                            console.log(password)
+                            console.log(email)
+                        }} />
                     </View>
 
                     <View style={styles.formRegister}>
@@ -98,10 +100,6 @@ const styles = StyleSheet.create({
     logoImage: {
         width: 100,
         height: 100,
-    },
-    formInput: {
-        flexDirection: 'row',
-        marginTop: 30,
     },
     formRegister: {
         flexDirection: 'row',
