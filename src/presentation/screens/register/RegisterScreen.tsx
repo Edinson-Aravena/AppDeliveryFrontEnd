@@ -1,15 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { globalColors } from '../../../config/theme/GlobalTheme';
-import { TitleComponent, IconComponent, InputComponent, RoundedButtonComponent } from '../../components';
+import { TitleComponent, InputComponent, RoundedButtonComponent } from '../../components';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../navigator/StackNavigator';
 import useViewModel from './ViewModel'
+import { PhoneNumberInputComponent } from '../../components/InputComponentPhone';
 
 export const RegisterScreen = () => {
 
     const { names, surnames, email, phone, password, repeatPassword, onChange, register } = useViewModel();
+
+    const [phoneNumber, setPhoneNumber] = useState('');
+
+
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     return (
@@ -66,14 +71,16 @@ export const RegisterScreen = () => {
                         onChangeText={onChange}
                     />
 
-                    <InputComponent
-                        icon={'call-outline'}
-                        placeholder={'Télefono'}
+
+                    <PhoneNumberInputComponent
+                        icon="call-outline"  
+                        placeholder="Número de teléfono"
                         value={phone}
-                        keyboardType={'numeric'}
-                        property='phone'
-                        onChangeText={onChange}
+                        keyboardType="phone-pad"
+                        property="phone"
+                        onChangeText={onChange} 
                     />
+
 
                     <InputComponent
                         icon={'keypad-outline'}
