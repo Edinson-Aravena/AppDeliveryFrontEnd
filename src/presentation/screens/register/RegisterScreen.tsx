@@ -10,7 +10,7 @@ import { PhoneNumberInputComponent } from '../../components/InputComponentPhone'
 
 export const RegisterScreen = () => {
 
-    const { names, surnames, email, phone, password, repeatPassword, onChange, register } = useViewModel();
+    const { name, lastname, email, phone, password, repeatPassword, onChange, register, errorMessage} = useViewModel();
 
     const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -47,18 +47,18 @@ export const RegisterScreen = () => {
                     <InputComponent
                         icon={'person-outline'}
                         placeholder={'Nombres'}
-                        value={names}
+                        value={name}
                         keyboardType={'default'}
-                        property='names'
+                        property='name'
                         onChangeText={onChange}
                     />
 
                     <InputComponent
                         icon={'person-outline'}
                         placeholder={'Apellidos'}
-                        value={surnames}
+                        value={lastname}
                         keyboardType={'default'}
-                        property='surnames'
+                        property='lastname'
                         onChangeText={onChange}
                     />
 
@@ -102,7 +102,9 @@ export const RegisterScreen = () => {
                     />
 
                     <View>
-                        <RoundedButtonComponent text='REGISTRARSE' onPress={() => register()} />
+                        <RoundedButtonComponent text='REGISTRARSE' onPress={() => {
+                            register()
+                        }} />
                     </View>
 
                     <View style={styles.formRegister}>
