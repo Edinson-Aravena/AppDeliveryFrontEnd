@@ -6,4 +6,5 @@ export interface User {
     phone:          string;
     password:       string;
     repeatPassword: string;
+    session_token?:  string;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput, TextStyle, KeyboardTypeOptions, View, StyleSheet } from "react-native";
 import { IconComponent } from "./IconComponent";
-import { globalColors } from "../../config/theme/GlobalTheme";
+import { globalColors } from "../theme/GlobalTheme";
 
 interface InputProps {
     icon: string;

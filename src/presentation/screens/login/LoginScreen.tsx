@@ -1,28 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput } from 'react-native';
-import { globalColors } from '../../../config/theme/GlobalTheme';
+import { globalColors } from '../../theme/GlobalTheme';
 import { TitleComponent, IconComponent, InputComponent, RoundedButtonComponent } from '../../components';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack'
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../navigator/StackNavigator';
 import useViewModel from './ViewModel'
 
-export const LoginScreen = () => {
+interface Props extends StackScreenProps<RootStackParamList, 'LoginScreen'>{};
 
-    const { email, password, onChange } = useViewModel();
+export const LoginScreen = ({navigation, route}:Props) => {
 
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const { email, password, onChange, login, errorMessage, user } = useViewModel();
 
+    
+
+    useEffect(() => {
+        if(errorMessage !== ""){
+            ToastAndroid.show(errorMessage, ToastAndroid.LONG)
+        }
+    }, [errorMessage])
+    
+    useEffect(() => {
+        if(user?.id != null && user?.id != undefined){
+            navigation.replace('ProfileInfoScreen')
+        }
+    }, [user])
+    
     return (
         <ImageBackground
             style={styles.container}
-            source={require('../../../assets/background.jpg')}
+            source={require('../../assets/background.jpg')}
             resizeMode="cover"
         >
             <View style={styles.logoContainer}>
                 <Image
                     style={styles.logoImage}
-                    source={require('../../../assets/logo.png')}
+                    source={require('../../assets/logo.png')}
                 />
                 <TitleComponent
                     text="Rapidos Y Sabrosos"
@@ -59,10 +73,7 @@ export const LoginScreen = () => {
                     />
 
                     <View>
-                        <RoundedButtonComponent text='ENTRAR' onPress={() => {
-                            console.log(password)
-                            console.log(email)
-                        }} />
+                        <RoundedButtonComponent text='ENTRAR' onPress={ login } />
                     </View>
 
                     <View style={styles.formRegister}>

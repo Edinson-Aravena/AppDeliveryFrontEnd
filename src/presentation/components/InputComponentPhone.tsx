@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { IconComponent } from "./IconComponent";
-import { globalColors } from "../../config/theme/GlobalTheme";
+import { globalColors } from "../theme/GlobalTheme";
 
 const countries = [
     { label: "🇨🇱 +56", value: "+56" },

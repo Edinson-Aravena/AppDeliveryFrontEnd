@@ -1,6 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, Text, StyleSheet } from 'react-native'
-import { globalColors } from '../../config/theme/GlobalTheme'
+import { globalColors } from '../theme/GlobalTheme'
 
 interface RoundedButtonProps {
     text: string;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput } from 'react-native';
-import { globalColors } from '../../../config/theme/GlobalTheme';
+import { globalColors } from '../../theme/GlobalTheme';
 import { TitleComponent, InputComponent, RoundedButtonComponent } from '../../components';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack'
@@ -20,13 +20,13 @@ export const RegisterScreen = () => {
     return (
         <ImageBackground
             style={styles.container}
-            source={require('../../../assets/background.jpg')}
+            source={require('../../assets/background.jpg')}
             resizeMode="cover"
         >
             <View style={styles.logoContainer}>
                 <Image
                     style={styles.logoImage}
-                    source={require('../../../assets/user_image.png')}
+                    source={require('../../assets/user_image.png')}
                 />
                 <TitleComponent
                     text="Selecciona una imagen "
