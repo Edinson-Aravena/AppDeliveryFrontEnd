@@ -7,12 +7,13 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../navigator/StackNavigator';
 import useViewModel from './ViewModel'
 import { PhoneNumberInputComponent } from '../../components/InputComponentPhone';
+import { ModalPickImage } from '../../components/ModalPickImage';
 
 export const RegisterScreen = () => {
 
-    const { name, lastname, email, phone, password, repeatPassword, onChange, register, errorMessage} = useViewModel();
+    const { name, lastname, email, phone, image, password, repeatPassword, onChange, register, errorMessage, pickImage, takePhoto} = useViewModel();
 
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
 
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -24,10 +25,20 @@ export const RegisterScreen = () => {
             resizeMode="cover"
         >
             <View style={styles.logoContainer}>
-                <Image
-                    style={styles.logoImage}
-                    source={require('../../assets/user_image.png')}
-                />
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                    {
+                        image == ''
+                            ? <Image
+                                style={styles.logoImage}
+                                source={require('../../assets/user_image.png')}
+                            />
+                            : <Image
+                                style={styles.logoImage}
+                                source={{ uri: image }}
+                            />
+                    }
+
+                </TouchableOpacity>
                 <TitleComponent
                     text="Selecciona una imagen "
                     size={30}
@@ -73,12 +84,12 @@ export const RegisterScreen = () => {
 
 
                     <PhoneNumberInputComponent
-                        icon="call-outline"  
+                        icon="call-outline"
                         placeholder="Número de teléfono"
                         value={phone}
                         keyboardType="phone-pad"
                         property="phone"
-                        onChangeText={onChange} 
+                        onChangeText={onChange}
                     />
 
 
@@ -114,8 +125,15 @@ export const RegisterScreen = () => {
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
-
+                <ModalPickImage
+                openGallery={pickImage}
+                openCamera={takePhoto}
+                modalUseState={modalVisible}
+                setModalUseState={setModalVisible} 
+            />
             </View>
+
+            
         </ImageBackground>
     );
 }

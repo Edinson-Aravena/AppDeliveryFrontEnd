@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { RegisterAuthUseCase } from '../../../domain/useCases/auth/RegisterAuth';
 import { ToastAndroid } from 'react-native';
+import * as ImagePicker from 'expo-image-picker'
 
 export const RegisterViewModel = () => {
 
@@ -19,9 +20,38 @@ export const RegisterViewModel = () => {
         lastname: '',
         email: '',
         phone: '',
+        image:'',
         password: '',
         repeatPassword: ''
     });
+
+    const [file, setFile] = useState<ImagePicker.ImagePickerResult | null>(null);
+
+    const pickImage = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            quality: 1
+        });
+    
+        if (!result.canceled) {
+            onChange('image', result.assets[0].uri);
+            setFile(result);
+        }
+    };
+
+    const takePhoto = async () => {
+        const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            quality: 1
+        });
+    
+        if (!result.canceled) {
+            onChange('image', result.assets[0].uri);
+            setFile(result);
+        }
+    };
 
     const onChange = (property: string, value: any) => {
         setValues({ ...values, [property]: value })
@@ -71,6 +101,8 @@ export const RegisterViewModel = () => {
         onChange,
         register,
         errorMessage,
+        pickImage,
+        takePhoto,
     }
 }
 
