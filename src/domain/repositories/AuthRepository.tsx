@@ -1,7 +1,9 @@
 import { ResponseAPIDelivery } from "../../Data/sources/remote/models/ResponseApiDelivery";
 import { User } from "../entities/User";
+import * as ImagePicker from 'expo-image-picker';
 
 export interface AuthRepository {
     register(user: User): Promise<ResponseAPIDelivery>;
+    registerWithImage(user: User, file:ImagePicker.ImagePickerAsset): Promise<ResponseAPIDelivery>;
     login(emal:string, password: string): Promise<ResponseAPIDelivery>
 }

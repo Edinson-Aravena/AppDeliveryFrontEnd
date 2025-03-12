@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { RegisterAuthUseCase } from '../../../domain/useCases/auth/RegisterAuth';
 import { ToastAndroid } from 'react-native';
 import * as ImagePicker from 'expo-image-picker'
+import { RegisterWithImageAuthUseCase } from '../../../domain/useCases/auth/RegisterWithImageAuth';
 
 export const RegisterViewModel = () => {
 
@@ -25,31 +26,34 @@ export const RegisterViewModel = () => {
         repeatPassword: ''
     });
 
-    const [file, setFile] = useState<ImagePicker.ImagePickerResult | null>(null);
+    const [file, setFile] = useState<ImagePicker.ImagePickerAsset>();
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: 'images', // Solo imágenes
             allowsEditing: true,
-            quality: 1
+            aspect: [4, 3],
+            quality: 1,
         });
     
-        if (!result.canceled) {
-            onChange('image', result.assets[0].uri);
-            setFile(result);
+        if (result.assets && result.assets.length > 0) {
+            const asset = result.assets[0];
+            onChange('image', asset.uri); // Pasa la URI de la imagen seleccionada
+            setFile(asset); // Puedes almacenar el asset completo si lo necesitas
         }
     };
 
     const takePhoto = async () => {
         const result = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: 'images',
             allowsEditing: true,
             quality: 1
         });
     
         if (!result.canceled) {
+            const asset = result.assets[0];
             onChange('image', result.assets[0].uri);
-            setFile(result);
+            setFile(asset);
         }
     };
 
@@ -59,12 +63,12 @@ export const RegisterViewModel = () => {
 
     const register = async () => {
         if (isValidForm()) {
-            const response = await (RegisterAuthUseCase(values));
+            const response = await (RegisterWithImageAuthUseCase(values, file));
             console.log("RESULT: " + JSON.stringify(response))
         }
 
     }
-
+ 
     const isValidForm = (): boolean => {
         if (values.name == '') {
             setErrorMessage('Ingresa tu nombre')
@@ -92,6 +96,10 @@ export const RegisterViewModel = () => {
         }
         if (values.password !== values.repeatPassword) {
             setErrorMessage('Las contraseña no coinciden')
+            return false;
+        }
+        if (values.image === '') {
+            setErrorMessage('Selecciona una imágen')
             return false;
         }
         return true;
