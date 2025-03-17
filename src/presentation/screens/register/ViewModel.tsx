@@ -3,6 +3,8 @@ import { RegisterAuthUseCase } from '../../../domain/useCases/auth/RegisterAuth'
 import { ToastAndroid } from 'react-native';
 import * as ImagePicker from 'expo-image-picker'
 import { RegisterWithImageAuthUseCase } from '../../../domain/useCases/auth/RegisterWithImageAuth';
+import { SaveUserUseCase } from '../../../domain/useCases/userLocal/SaveUserLocal';
+import { useUserLocal } from '../../hooks/useUserLocal';
 
 export const RegisterViewModel = () => {
 
@@ -25,8 +27,10 @@ export const RegisterViewModel = () => {
         password: '',
         repeatPassword: ''
     });
+    const [loading, setLoading] = useState(false)
 
     const [file, setFile] = useState<ImagePicker.ImagePickerAsset>();
+    const {user, getUserSession} = useUserLocal();
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -63,8 +67,16 @@ export const RegisterViewModel = () => {
 
     const register = async () => {
         if (isValidForm()) {
-            const response = await (RegisterWithImageAuthUseCase(values, file));
+            setLoading(true)
+            const response = await (RegisterWithImageAuthUseCase(values, file!));
             console.log("RESULT: " + JSON.stringify(response))
+            setLoading(false)
+            if(response.success){
+                await SaveUserUseCase(response.data)
+                getUserSession()
+            }else{
+                setErrorMessage(response.message);
+            }
         }
 
     }
@@ -111,6 +123,8 @@ export const RegisterViewModel = () => {
         errorMessage,
         pickImage,
         takePhoto,
+        user,
+        loading,
     }
 }
 

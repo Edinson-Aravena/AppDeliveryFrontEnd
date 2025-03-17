@@ -2,14 +2,14 @@ import axios from 'axios'
 
 
 const ApiDelivery = axios.create({
-    baseURL: 'http://192.168.153.226:3000/api',
+    baseURL: 'http://192.168.153.58:3000/api',
     headers: {
         'Content-Type': 'application/json'
     }
 })
 
 const ApiDeliveryForImage = axios.create({
-    baseURL: 'http://192.168.153.226:3000/api',
+    baseURL: 'http://192.168.153.58:3000/api',
     headers: {
         'Content-Type': 'multipart/form-data',
         'accept':'application/json'

@@ -1,22 +1,27 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput, ActivityIndicator } from 'react-native';
 import { globalColors } from '../../theme/GlobalTheme';
 import { TitleComponent, InputComponent, RoundedButtonComponent } from '../../components';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack'
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../navigator/StackNavigator';
 import useViewModel from './ViewModel'
 import { PhoneNumberInputComponent } from '../../components/InputComponentPhone';
 import { ModalPickImage } from '../../components/ModalPickImage';
 
-export const RegisterScreen = () => {
+interface Props extends StackScreenProps<RootStackParamList, 'RegisterScreen'> { }
 
-    const { name, lastname, email, phone, image, password, repeatPassword, onChange, register, errorMessage, pickImage, takePhoto} = useViewModel();
+export const RegisterScreen = ({ navigation, route }: Props) => {
+
+    const { name, lastname, email, phone, image, password, repeatPassword, onChange, register, user, loading, errorMessage, pickImage, takePhoto } = useViewModel();
 
     const [modalVisible, setModalVisible] = useState(false);
 
-
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    useEffect(() => {
+        if (user?.id != null && user?.id != undefined) {
+            navigation.replace('ProfileInfoScreen')
+        }
+    }, [user])
 
     return (
         <ImageBackground
@@ -24,6 +29,7 @@ export const RegisterScreen = () => {
             source={require('../../assets/background.jpg')}
             resizeMode="cover"
         >
+
             <View style={styles.logoContainer}>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
                     {
@@ -126,17 +132,25 @@ export const RegisterScreen = () => {
                     </View>
                 </ScrollView>
                 <ModalPickImage
-                openGallery={pickImage}
-                openCamera={takePhoto}
-                modalUseState={modalVisible}
-                setModalUseState={setModalVisible} 
-            />
+                    openGallery={pickImage}
+                    openCamera={takePhoto}
+                    modalUseState={modalVisible}
+                    setModalUseState={setModalVisible}
+                />
+                {
+                    loading &&
+                    <ActivityIndicator style={styles.loading} size="large" color={globalColors.buttons} />
+
+                }
+
             </View>
 
-            
+
         </ImageBackground>
     );
 }
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -172,5 +186,12 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         fontWeight: 'bold',
         marginLeft: 5,
-    }
+    },
+    loading: {
+        position: 'absolute',
+        bottom: 0,
+        top: 0,
+        right: 0,
+        left: 0,
+    },
 });
