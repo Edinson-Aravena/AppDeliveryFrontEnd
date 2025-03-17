@@ -26,7 +26,7 @@ export const LoginScreen = ({navigation, route}:Props) => {
             if(user.roles?.length! >1){
                 navigation.replace('RolesScreen')
             }else{
-                navigation.replace('ProfileInfoScreen')
+                navigation.replace('ClientBottomTabsnavigator')
             }
         }
     }, [user])
