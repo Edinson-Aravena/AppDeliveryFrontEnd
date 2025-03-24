@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { globalColors } from '../../theme/GlobalTheme';
 import { TitleComponent, IconComponent, InputComponent, RoundedButtonComponent } from '../../components';
-import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../navigator/StackNavigator';
 import useViewModel from './ViewModel'
@@ -22,7 +21,7 @@ export const LoginScreen = ({navigation, route}:Props) => {
     }, [errorMessage])
     
     useEffect(() => {
-        if(user?.id != null && user?.id != undefined){
+        if(user?.id != null && user?.id != undefined && user?.id != "") {   
             if(user.roles?.length! >1){
                 navigation.replace('RolesScreen')
             }else{

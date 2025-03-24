@@ -6,6 +6,7 @@ export interface User {
     lastname:       string;
     email:          string;
     phone:          string;
+    image?:          string;
     password:       string;
     repeatPassword: string;
     session_token?:  string;

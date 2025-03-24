@@ -6,6 +6,10 @@ import { RegisterScreen } from '../screens/register/RegisterScreen';
 import RolesScreen from '../screens/roles/Roles';
 import { RestaurantBottomTabsnavigator } from './RestaurantBottomTabsnavigator';
 import { ClientBottomTabsnavigator } from './ClientBottomTabsnavigator copy';
+import { ProfileUpdateScreen } from '../screens/profile/update/ProfileUpdate';
+import { globalColors } from '../theme/GlobalTheme';
+import { User } from '../../domain/entities/User';
+import { UserProvider } from '../context/UserContext';
 
 export type RootStackParamList = {
     LoginScreen: undefined,
@@ -13,40 +17,59 @@ export type RootStackParamList = {
     RolesScreen: undefined,
     ClientBottomTabsnavigator: undefined,
     RestaurantBottomTabsnavigator: undefined,
+    ProfileUpdateScreen: { user: User },
 }
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const StackNavigator = () => {
     return (
         <NavigationContainer>
-            <Stack.Navigator
-                screenOptions={
-                    {
-                        headerShown: false,
+            <UserState>
+                <Stack.Navigator
+                    screenOptions={
+                        {
+                            headerShown: false,
+                        }
                     }
-                }
-            >
-                <Stack.Screen
-                    name="LoginScreen"
-                    component={LoginScreen}
-                />
-                <Stack.Screen
-                    name="RegisterScreen"
-                    component={RegisterScreen}
-                />
-                <Stack.Screen
-                    name="RolesScreen"
-                    component={RolesScreen}
-                />
-                <Stack.Screen
-                    name="RestaurantBottomTabsnavigator"
-                    component={RestaurantBottomTabsnavigator}
-                />
-                <Stack.Screen
-                    name="ClientBottomTabsnavigator"
-                    component={ClientBottomTabsnavigator}
-                />
-            </Stack.Navigator>
+                >
+                    <Stack.Screen
+                        name="LoginScreen"
+                        component={LoginScreen}
+                    />
+                    <Stack.Screen
+                        name="RegisterScreen"
+                        component={RegisterScreen}
+                    />
+                    <Stack.Screen
+                        name="RolesScreen"
+                        component={RolesScreen}
+                    />
+                    <Stack.Screen
+                        name="RestaurantBottomTabsnavigator"
+                        component={RestaurantBottomTabsnavigator}
+                    />
+                    <Stack.Screen
+                        name="ClientBottomTabsnavigator"
+                        component={ClientBottomTabsnavigator}
+                    />
+                    <Stack.Screen
+                        name="ProfileUpdateScreen"
+                        component={ProfileUpdateScreen}
+                        options={{
+                            headerShown: true,
+                            title: 'Actualizar Perfil',
+                        }}
+                    />
+                </Stack.Navigator>
+            </UserState>
         </NavigationContainer>
     );
 };
+
+const UserState = ({ children }: any) => {
+    return (
+        <UserProvider>
+            {children}
+        </UserProvider>
+    )
+}

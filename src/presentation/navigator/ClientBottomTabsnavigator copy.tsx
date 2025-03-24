@@ -3,6 +3,7 @@ import { ClientCategoryListScreen } from '../screens/client/category/list/Catego
 import { ClientOrderListScreen } from '../screens/client/category/order/list/OrderList';
 import { ProfileInfoScreen } from '../screens/profile/info/ProfileInfo';
 import { IconComponent } from '../components/IconComponent';
+import { globalColors } from '../theme/GlobalTheme';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,7 +15,9 @@ export const ClientBottomTabsnavigator = () => {
                     paddingBottom: 10,
                     paddingTop: 5,
                     height: 60,
-                }
+                },
+                tabBarActiveTintColor: globalColors.buttons,
+                tabBarInactiveTintColor: '#9E9E9E',
             }}
         >
             <Tab.Screen
@@ -39,7 +42,7 @@ export const ClientBottomTabsnavigator = () => {
                 options={{
                     headerShown: false,
                     tabBarLabel: 'Perfil',
-                    tabBarIcon: ({ color }) => (
+                    tabBarIcon: ({color}) => (
                         <IconComponent icon="id-card-outline" color={color} size={26} />
                     )
                 }}

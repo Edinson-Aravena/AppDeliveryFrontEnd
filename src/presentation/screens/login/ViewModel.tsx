@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { LoginAuthUseCase } from '../../../domain/useCases/auth/LoginAuth';
 import { SaveUserUseCase } from '../../../domain/useCases/userLocal/SaveUserLocal';
 import { useUserLocal } from '../../hooks/useUserLocal';
+import { UserContext } from '../../context/UserContext';
 
 const LoginViewModel = () => {
 
@@ -12,7 +13,8 @@ const LoginViewModel = () => {
         password: '',
     });
 
-    const {user, getUserSession} = useUserLocal();
+    //const {user, getUserSession} = useUserLocal();
+    const {user, saveUserSession} = useContext(UserContext);
     
     console.log("User session:", JSON.stringify(user))
 
@@ -29,8 +31,7 @@ const LoginViewModel = () => {
             if(!response.success){
                 setErrorMessage(response.message)
             }else{
-                await SaveUserUseCase(response.data);
-                getUserSession()
+                saveUserSession(response.data);
             }
         }
     }
