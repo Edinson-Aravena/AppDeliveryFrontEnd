@@ -1,40 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput, ActivityIndicator } from 'react-native';
-import { globalColors } from '../../../theme/GlobalTheme';
-import { TitleComponent, InputComponent, RoundedButtonComponent } from '../../../components';
-import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
-import { RootStackParamList } from '../../../navigator/StackNavigator';
-import useViewModel from './ViewModel'
-import { PhoneNumberInputComponent } from '../../../components/InputComponentPhone';
-import { ModalPickImage } from '../../../components/ModalPickImage';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, ActivityIndicator, Image, ToastAndroid } from "react-native";
+import { globalColors, globalStyles } from "../../../../theme/GlobalTheme";
+import { InputComponent, RoundedButtonComponent, TitleComponent } from "../../../../components";
+import { ModalPickImage } from "../../../../components/ModalPickImage";
+import useViewModel from "./ViewModel";
+import { useEffect, useState } from "react";
 
-interface Props extends StackScreenProps<RootStackParamList, 'ProfileUpdateScreen'> { }
 
-export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
+export const RestaurantCategoryCreateScreen = () => {
 
-    const {user} = route.params;
-    const { name, lastname, email, phone, image, onChange,onChangeInfoUpdate, update, loading, pickImage, takePhoto, errorMessage, successMessage } = useViewModel(user);
-
+    const { name, description, image, loading, responseMessage, onChange, takePhoto, pickImage, createCategory} = useViewModel();
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
-        if(errorMessage != ''){
-            ToastAndroid.show(errorMessage, ToastAndroid.LONG)
+        if(responseMessage !== '') {
+            ToastAndroid.show(responseMessage, ToastAndroid.LONG);
         }
-    }, [errorMessage])
-
-    useEffect(() => {
-        if(successMessage != ''){
-            ToastAndroid.show(successMessage, ToastAndroid.LONG)
-        }
-    }, [successMessage])
-
+        
+    }, [responseMessage])
     
-
     return (
         <ImageBackground
             style={styles.container}
-            source={require('../../../assets/background2.jpg')}
+            source={require('../../../../assets/background2.jpg')}
             resizeMode="cover"
         >
 
@@ -44,16 +31,16 @@ export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
                         image == ''
                             ? <Image
                                 style={styles.logoImage}
-                                source={require('../../../assets/user.png')}
-                                //source={{uri: user?.image}}
+                                source={require('../../../../assets/camera.png')}
+                            //source={{uri: user?.image}}
                             />
                             : <Image
                                 style={styles.logoImage}
                                 source={{ uri: image }}
                             />
                     }
-
                 </TouchableOpacity>
+
                 <TitleComponent
                     text="Selecciona una imagen "
                     size={30}
@@ -65,14 +52,14 @@ export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
                 <ScrollView>
 
                     <TitleComponent
-                        text="ACTUALIZAR PERFIL"
+                        text="AGREGAR CATEGORÍA"
                         size={20}
                         style={{ color: globalColors.title, fontWeight: "bold", marginTop: 10 }}
                     />
 
                     <InputComponent
-                        icon={'person-outline'}
-                        placeholder={'Nombres'}
+                        icon={'create-outline'}
+                        placeholder={'Nombre Categoría'}
                         value={name}
                         keyboardType={'default'}
                         property='name'
@@ -80,27 +67,17 @@ export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
                     />
 
                     <InputComponent
-                        icon={'person-outline'}
-                        placeholder={'Apellidos'}
-                        value={lastname}
+                        icon={'document-text-outline'}
+                        placeholder={'Descripción'}
+                        value={description}
                         keyboardType={'default'}
-                        property='lastname'
-                        onChangeText={onChange}
-                    />
-
-
-                    <PhoneNumberInputComponent
-                        icon="call-outline"
-                        placeholder="Número de teléfono"
-                        value={phone}
-                        keyboardType="phone-pad"
-                        property="phone"
+                        property='description'
                         onChangeText={onChange}
                     />
 
                     <View>
-                        <RoundedButtonComponent text='ACTUALIZAR' onPress={() => {
-                            update()
+                        <RoundedButtonComponent text='CREAR CATEGORÍA' onPress={() => {
+                            createCategory()
                         }} />
                     </View>
 
@@ -113,17 +90,14 @@ export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
                 />
                 {
                     loading &&
-                    <ActivityIndicator style={styles.loading} size="large" color={globalColors.buttons} />
+                    <ActivityIndicator style={globalStyles.loading} size="large" color={globalColors.buttons} />
 
                 }
 
             </View>
-
-
         </ImageBackground>
-    );
+    )
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -142,7 +116,7 @@ const styles = StyleSheet.create({
     logoContainer: {
         marginBottom: 20,
         position: 'absolute',
-        top:'15%',
+        top: '15%',
         alignSelf: 'center',
         alignItems: 'center',
     },
@@ -162,12 +136,5 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         fontWeight: 'bold',
         marginLeft: 5,
-    },
-    loading: {
-        position: 'absolute',
-        bottom: 0,
-        top: 0,
-        right: 0,
-        left: 0,
     },
 });

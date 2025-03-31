@@ -40,8 +40,8 @@ export const profileUpdateViewModel = (user: User ) => {
     
         if (result.assets && result.assets.length > 0) {
             const asset = result.assets[0];
-            onChange('image', asset.uri); // Pasa la URI de la imagen seleccionada
-            setFile(asset); // Puedes almacenar el asset completo si lo necesitas
+            onChange('image', asset.uri); 
+            setFile(asset);
         }
     };
 

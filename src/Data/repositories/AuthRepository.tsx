@@ -3,7 +3,7 @@ import { User } from "../../domain/entities/User";
 import { AuthRepository } from "../../domain/repositories/AuthRepository";
 import { ApiDelivery, ApiDeliveryForImage } from "../sources/remote/api/ApiDelivery";
 import { ResponseAPIDelivery } from "../sources/remote/models/ResponseApiDelivery";
-import { ImageInfo, ImagePickerAsset, ImagePickerCanceledResult, ImagePickerResult } from "expo-image-picker";
+import { ImagePickerAsset } from "expo-image-picker";
 import mime from 'mime';
 
 export class AuthRepositoryImple implements AuthRepository {

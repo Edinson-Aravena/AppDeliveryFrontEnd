@@ -3,6 +3,8 @@ import { RestaurantCategoryListScreen } from '../screens/restaurante/category/li
 import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/orderList';
 import { ProfileInfoScreen } from '../screens/profile/info/ProfileInfo';
 import { IconComponent } from '../components';
+import {  TouchableOpacity } from 'react-native';
+import { globalColors } from '../theme/GlobalTheme';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,13 +20,23 @@ export const RestaurantBottomTabsnavigator = () => {
             }}
         >
             <Tab.Screen
-                options={{
-                    headerShown: false,
-                    tabBarLabel: 'Categorias',
-                    tabBarIcon: ({ color }) => (
-                        <IconComponent icon="reorder-four-outline" color={color} size={26} />
-                    )
-                }}
+                options={({route, navigation}) =>(
+                    {
+                        headerShown: true,
+                        title: 'Categorias',
+                        tabBarLabel: 'Categorias',
+                        tabBarIcon: ({ color }) => (
+                            <IconComponent icon="reorder-four-outline" color={color} size={26} />
+                        ),
+                        headerRight: () => (
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('RestaurantCategoryCreateScreen')}
+                                style={{ marginRight: 10 }}>
+                                <IconComponent icon="add-circle-outline" color={globalColors.buttons} size={30} />
+                            </TouchableOpacity>   
+                        )
+                    }
+                )}
                 name="RestaurantCategoryListScreen" component={RestaurantCategoryListScreen} />
             <Tab.Screen
                 options={{
