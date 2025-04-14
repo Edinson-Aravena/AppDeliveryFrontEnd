@@ -1,42 +1,40 @@
 import React, { useContext, useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
-import { CreateCategoryUseCase } from '../../../../../domain/useCases/category/CreateCategory';
+
+import { UpdateCategoryUseCase } from '../../../../../domain/useCases/category/UpdateCategory';
+import { UpdateWithImageCategoryUseCase } from '../../../../../domain/useCases/category/UpdateWithImageCategory';
+import { Category } from '../../../../../domain/entities/Category';
+import { ResponseAPIDelivery } from '../../../../../Data/sources/remote/models/ResponseApiDelivery';
 import { CategoryContext } from '../../../../context/CategoryContext';
 
-
-const RestaurantCategoryViewModel = () => {
+const RestaurantCategoryUpdateViewModel = (category: Category ) => {
 
     const [file, setFile] = useState<ImagePicker.ImagePickerAsset>();
     const [loading, setLoading] = useState(false)
     const [responseMessage, setResponseMessage] = useState('')
 
-    const { create } = useContext(CategoryContext)
+    const [values, setValues] = useState(category );
 
-    const [values, setValues] = useState({
-        name: '',
-        description: '',
-        image: '',
-    });
+    const {update, updateWithImage} = useContext(CategoryContext)
 
     const onChange = (property: string, value: any) => {
         setValues({ ...values, [property]: value })
     }
 
-    const createCategory = async () => {
+    const updateCategory = async () => {
         setLoading(true)
-        const response = await create(values, file!)
+        let response = {} as ResponseAPIDelivery;
+
+        if(values.image?.includes('https://')){
+            response = await update(values)
+        }else{
+            response = await updateWithImage(values, file!)
+        }
+        
         setLoading(false)
         setResponseMessage(response.message)
-        resetForm()
     }
-
-    const resetForm = async () => {
-        setValues({
-            name: '',
-            description: '',
-            image: ''
-        })
-    }
+ 
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -59,7 +57,7 @@ const RestaurantCategoryViewModel = () => {
             allowsEditing: true,
             quality: 1
         });
-
+ 
         if (!result.canceled) {
             const asset = result.assets[0];
             onChange('image', result.assets[0].uri);
@@ -74,8 +72,8 @@ const RestaurantCategoryViewModel = () => {
         pickImage,
         loading,
         responseMessage,
-        createCategory
+        updateCategory,
     }
 }
 
-export default RestaurantCategoryViewModel;
+export default RestaurantCategoryUpdateViewModel;

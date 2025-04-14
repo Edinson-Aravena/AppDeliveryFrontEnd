@@ -7,10 +7,9 @@ import RolesScreen from '../screens/roles/Roles';
 import { RestaurantBottomTabsnavigator } from './RestaurantBottomTabsnavigator';
 import { ClientBottomTabsnavigator } from './ClientBottomTabsnavigator copy';
 import { ProfileUpdateScreen } from '../screens/profile/update/ProfileUpdate';
-import { globalColors } from '../theme/GlobalTheme';
 import { User } from '../../domain/entities/User';
 import { UserProvider } from '../context/UserContext';
-import { RestaurantCategoryCreateScreen } from '../screens/restaurante/category/create/CategoryCreate';
+
 
 export type RootStackParamList = {
     LoginScreen: undefined,
@@ -19,7 +18,7 @@ export type RootStackParamList = {
     ClientBottomTabsnavigator: undefined,
     RestaurantBottomTabsnavigator: undefined,
     ProfileUpdateScreen: { user: User },
-    RestaurantCategoryCreateScreen: undefined,
+    
 }
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -60,14 +59,6 @@ export const StackNavigator = () => {
                         options={{
                             headerShown: true,
                             title: 'Actualizar Perfil',
-                        }}
-                    />
-                    <Stack.Screen
-                        name="RestaurantCategoryCreateScreen"
-                        component={RestaurantCategoryCreateScreen}
-                        options={{
-                            headerShown: true,
-                            title: 'Nueva Categoria',
                         }}
                     />
                 </Stack.Navigator>
