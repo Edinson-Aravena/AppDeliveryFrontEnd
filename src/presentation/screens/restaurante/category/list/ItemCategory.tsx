@@ -23,7 +23,9 @@ export const RestaurantCategoryListItem = ({ category, remove }: Props) => {
     const navigation = useNavigation<StackNavigationProp<CategoryStackParamList>>();
 
     return (
-        <>
+        <TouchableOpacity 
+            onPress={() => navigation.navigate('RestaurantProductNavigator', {category: category})}
+        >
             <View style={styles.container}>
                 <Image source={{ uri: category.image }} style={styles.image} />
                 <View style={styles.infoContainer}>
@@ -63,7 +65,7 @@ export const RestaurantCategoryListItem = ({ category, remove }: Props) => {
                     </View>
                 </View>
             </Modal>
-        </>
+        </TouchableOpacity>
     );
 };
 

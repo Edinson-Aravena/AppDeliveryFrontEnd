@@ -35,7 +35,7 @@ export class CategoryRepositoryImple implements CategoryRepository{
     
             data.append('category', JSON.stringify(category));
     
-            const response = await ApiDeliveryForImage.post<ResponseAPIDelivery>('categories/create', data);
+            const response = await ApiDeliveryForImage.post<ResponseAPIDelivery>('/categories/create', data);
     
             return Promise.resolve(response.data);
 

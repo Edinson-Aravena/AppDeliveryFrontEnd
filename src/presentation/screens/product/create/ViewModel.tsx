@@ -1,0 +1,121 @@
+import React, { useContext, useState } from 'react'
+import * as ImagePicker from 'expo-image-picker'
+
+import { Category } from '../../../../domain/entities/Category';
+import { ProductContext } from '../../../context/ProductContext';
+
+
+const RestaurantProductCreateViewModel = (category: Category) => {
+
+
+    const [loading, setLoading] = useState(false)
+    const [responseMessage, setResponseMessage] = useState('')
+
+    const { create } = useContext(ProductContext)
+
+    const [values, setValues] = useState({
+        name: '',
+        description: '',
+        image1: '',
+        image2: '',
+        image3: '',
+        price: 0,
+        id_category: category.id,
+    });
+    const [file1, setFile1] = useState<ImagePicker.ImagePickerAsset>();
+    const [file2, setFile2] = useState<ImagePicker.ImagePickerAsset>();
+    const [file3, setFile3] = useState<ImagePicker.ImagePickerAsset>();
+
+    const onChange = (property: string, value: any) => {
+        setValues({ ...values, [property]: value })
+    }
+
+    const createProduct = async () => {
+        console.log('Producto Formulario', JSON.stringify(values))
+
+        let files = []
+
+        files.push(file1!);
+        files.push(file2!);
+        files.push(file3!);
+
+        setLoading(true)
+
+        const response = await create(values, files!)
+        setLoading(false)
+        setResponseMessage(response.message)
+        if(response.success){
+            resetForm()
+        }
+    }
+
+    const resetForm = async () => {
+        setValues({
+            name: '',
+            description: '',
+            image1: '',
+            image2: '',
+            image3: '',
+            price: 0,
+            id_category: category.id,
+        })
+    }
+
+    const pickImage = async (numberImage: number) => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: 'images',
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (result.assets && result.assets.length > 0) {
+
+
+            if (numberImage === 1) {
+                onChange('image1', result.assets[0].uri);
+                setFile1(result.assets[0]);
+            } else if (numberImage === 2) {
+                onChange('image2', result.assets[0].uri);
+                setFile2(result.assets[0]);
+            } else if (numberImage === 3) {
+                onChange('image3', result.assets[0].uri);
+                setFile3(result.assets[0]);
+            }
+        }
+    };
+
+    const takePhoto = async (numberImage: number) => {
+        const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: 'images',
+            allowsEditing: true,
+            quality: 1
+        });
+
+        if (!result.canceled) {
+            const asset = result.assets[0];
+            if (numberImage === 1) {
+                onChange('image1', asset.uri);
+                setFile1(asset);
+            } else if (numberImage === 2) {
+                onChange('image2', asset.uri);
+                setFile2(asset);
+            } else if (numberImage === 3) {
+                onChange('image3', asset.uri);
+                setFile3(asset);
+            }
+        }
+    };
+
+    return {
+        ...values,
+        onChange,
+        takePhoto,
+        pickImage,
+        loading,
+        responseMessage,
+        createProduct
+    }
+}
+
+export default RestaurantProductCreateViewModel;

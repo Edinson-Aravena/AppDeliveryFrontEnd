@@ -9,11 +9,13 @@ import { RestaurantCategoryListScreen } from '../screens/restaurante/category/li
 import { IconComponent } from '../components';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { globalColors } from '../theme/GlobalTheme';
+import { RestaurantProductNavigator } from './RestaurantProductNavigator';
 
 export type CategoryStackParamList = {
   RestaurantCategoryListScreen: undefined,
   RestaurantCategoryCreateScreen: undefined,
   RestaurantCategoryUpdateScreen: { category: Category },
+  RestaurantProductNavigator: { category: Category },
 }
 const Stack = createNativeStackNavigator<CategoryStackParamList>();
 
@@ -60,6 +62,10 @@ export const RestaurantCategoryNavigator = () => {
             headerShown: true,
             title: 'Editar Categoria',
           }}
+        />
+        <Stack.Screen
+          name="RestaurantProductNavigator"
+          component={RestaurantProductNavigator}
         />
       </Stack.Navigator>
     </CategoryState>
