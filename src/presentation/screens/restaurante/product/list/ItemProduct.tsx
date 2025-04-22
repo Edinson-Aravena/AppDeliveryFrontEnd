@@ -1,38 +1,47 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Modal, Button, Dimensions } from 'react-native';
 import { IconComponent } from '../../../../components';
-import { Category } from '../../../../../domain/entities/Category';
 import { globalColors } from '../../../../theme/GlobalTheme';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CategoryStackParamList } from '../../../../navigator/RestaurantCategoryNavigator';
+import { Product } from '../../../../../domain/entities/Product';
 import { ScrollView } from 'react-native-gesture-handler';
+import { ProductStackParamList } from '../../../../navigator/RestaurantProductNavigator';
+import { Category } from '../../../../../domain/entities/Category';
 
 interface Props {
+    product: Product;
     category: Category;
-    remove: (id: string) => void;
+    remove: (product: Product) => void;
 }
 
-export const RestaurantCategoryListItem = ({ category, remove }: Props) => {
+const screenWidth = Dimensions.get('window').width;
+const itemWidth = (screenWidth - 40) / 2; // ajusta márgenes
+
+
+export const RestaurantProductListItem = ({ product, remove, category }: Props) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     const handleDelete = () => {
+        console.log('Producto a eliminar:', product.id);
         setModalVisible(false);
-        remove(category.id!);
+        remove(product);
     };
 
-    const navigation = useNavigation<StackNavigationProp<CategoryStackParamList>>();
+    const navigation = useNavigation<StackNavigationProp<ProductStackParamList>>();
 
     return (
-        <ScrollView>
+        <ScrollView style={{}}>
             <TouchableOpacity
-                onPress={() => navigation.navigate('RestaurantProductNavigator', { category: category })}
+            //onPress={() => navigation.navigate('RestaurantProductUpdateScreen', {category: category, product: product})}
             >
                 <View style={styles.container}>
-                    <Image source={{ uri: category.image }} style={styles.image} />
+                    <Image source={{ uri: product.image1 }} style={styles.image} />
                     <View style={styles.infoContainer}>
-                        <Text style={styles.name}>{category.name}</Text>
-                        <Text style={styles.description}>{category.description}</Text>
+                        <Text style={styles.name}>{product.name}</Text>
+                        <Text style={styles.description}>➤{product.description}</Text>
+                        <Text style={styles.description}>➤{product.price} CLP</Text>
                     </View>
                     <View style={styles.iconContainer}>
                         <TouchableOpacity
@@ -41,7 +50,9 @@ export const RestaurantCategoryListItem = ({ category, remove }: Props) => {
                         >
                             <IconComponent icon={'trash-outline'} size={20} color={'#fff'} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('RestaurantCategoryUpdateScreen', { category: category })} style={{ ...styles.iconWrapper, backgroundColor: 'blue' }}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('RestaurantProductUpdateScreen', {category: category, product: product})}
+                            style={{ ...styles.iconWrapper, backgroundColor: 'blue' }}>
                             <IconComponent icon={'pencil-outline'} size={20} color={'#fff'} />
                         </TouchableOpacity>
                     </View>
@@ -58,7 +69,7 @@ export const RestaurantCategoryListItem = ({ category, remove }: Props) => {
                         <View style={styles.modalContainer}>
                             <Text style={styles.modalTitle}>Confirmar eliminación</Text>
                             <Text style={styles.modalText}>
-                                ¿Estás seguro de que quieres eliminar la categoría <Text style={{ fontWeight: 'bold' }}>{category.name}</Text>?
+                                ¿Estás seguro de que quieres eliminar la categoría <Text style={{ fontWeight: 'bold' }}>{product.name}</Text>?
                             </Text>
                             <View style={styles.modalButtons}>
                                 <Button title="Cancelar" onPress={() => setModalVisible(false)} color="#888" />

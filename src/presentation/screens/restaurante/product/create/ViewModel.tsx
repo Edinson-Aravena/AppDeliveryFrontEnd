@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react'
 import * as ImagePicker from 'expo-image-picker'
 
-import { Category } from '../../../../domain/entities/Category';
-import { ProductContext } from '../../../context/ProductContext';
+import { Category } from '../../../../../domain/entities/Category';
+import { ProductContext } from '../../../../context/ProductContext';
 
 
 const RestaurantProductCreateViewModel = (category: Category) => {

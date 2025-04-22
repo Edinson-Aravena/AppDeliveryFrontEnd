@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, ActivityIndicator, Image, ToastAndroid } from "react-native";
-import { globalColors, globalStyles } from "../../../theme/GlobalTheme";
-import { IconComponent, InputComponent, RoundedButtonComponent, TitleComponent } from "../../../components";
-import { ModalPickImage } from "../../../components/ModalPickImage";
+import { globalColors, globalStyles } from "../../../../theme/GlobalTheme";
+import { IconComponent, InputComponent, RoundedButtonComponent, TitleComponent } from "../../../../components";
+import { ModalPickImage } from "../../../../components/ModalPickImage";
 import useViewModel from "./ViewModel"
 import { useEffect, useState } from "react";
 import { StackScreenProps } from "@react-navigation/stack";
-import { ProductStackParamList } from "../../../navigator/RestaurantProductNavigator";
-import { ModalPickMultipleImage } from "../../../components/ModalPickMultipleImage";
+import { ProductStackParamList } from "../../../../navigator/RestaurantProductNavigator";
+import { ModalPickMultipleImage } from "../../../../components/ModalPickMultipleImage";
 
 interface Props extends StackScreenProps<ProductStackParamList, 'RestaurantProductCreateScreen'>{};
 
@@ -28,7 +28,7 @@ export const RestaurantProductCreateScreen = ({navigation, route}:Props) => {
     return (
         <ImageBackground
             style={styles.container}
-            source={require('../../../assets/background2.jpg')}
+            source={require('../../../../assets/background2.jpg')}
             resizeMode="cover"
         >
 
@@ -42,7 +42,7 @@ export const RestaurantProductCreateScreen = ({navigation, route}:Props) => {
                             image1 == ''
                                 ? <Image
                                     style={styles.logoImage}
-                                    source={require('../../../assets/camera.png')}
+                                    source={require('../../../../assets/camera.png')}
                                 //source={{uri: user?.image}}
                                 />
                                 : <Image
@@ -60,7 +60,7 @@ export const RestaurantProductCreateScreen = ({navigation, route}:Props) => {
                             image2 == ''
                                 ? <Image
                                     style={styles.logoImage}
-                                    source={require('../../../assets/camera.png')}
+                                    source={require('../../../../assets/camera.png')}
                                 //source={{uri: user?.image}}
                                 />
                                 : <Image
@@ -78,7 +78,7 @@ export const RestaurantProductCreateScreen = ({navigation, route}:Props) => {
                             image3 == ''
                                 ? <Image
                                     style={styles.logoImage}
-                                    source={require('../../../assets/camera.png')}
+                                    source={require('../../../../assets/camera.png')}
                                 //source={{uri: user?.image}}
                                 />
                                 : <Image

@@ -1,6 +1,6 @@
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RestaurantProductListScreen } from '../screens/product/list/ProductList';
+import { RestaurantProductListScreen } from '../screens/restaurante/product/list/ProductList';
 import { StackScreenProps } from '@react-navigation/stack';
 import { CategoryStackParamList } from './RestaurantCategoryNavigator';
 import { Category } from '../../domain/entities/Category';
@@ -8,13 +8,16 @@ import { Category } from '../../domain/entities/Category';
 
 import { IconComponent } from '../components';
 import { globalColors } from '../theme/GlobalTheme';
-import { RestaurantProductCreateScreen } from '../screens/product/create/ProductCreate';
+import { RestaurantProductCreateScreen } from '../screens/restaurante/product/create/ProductCreate'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ProductProvider } from '../context/ProductContext';
+import { RestaurantProductUpdateScreen } from '../screens/restaurante/product/update/ProductUpdate';
+import { Product } from '../../domain/entities/Product';
 
 export type ProductStackParamList = {
     RestaurantProductListScreen: { category: Category };
     RestaurantProductCreateScreen: { category: Category };
+    RestaurantProductUpdateScreen: { category: Category, product: Product };
 }
 const stack = createNativeStackNavigator<ProductStackParamList>();
 
@@ -53,6 +56,14 @@ export const RestaurantProductNavigator = ({ navigation, route }: Props) => {
                     initialParams={{ category: route.params.category }}
                     options={{
                         title: 'Nuevo Producto',
+                        headerShown: true,
+                    }}
+                />
+                <stack.Screen
+                    name="RestaurantProductUpdateScreen"
+                    component={RestaurantProductUpdateScreen}
+                    options={{
+                        title: 'Actualizar Producto',
                         headerShown: true,
                     }}
                 />

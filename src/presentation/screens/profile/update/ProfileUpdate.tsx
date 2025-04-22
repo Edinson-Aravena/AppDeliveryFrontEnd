@@ -29,7 +29,7 @@ export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
         }
     }, [successMessage])
 
-    
+    console.log(phone)
 
     return (
         <ImageBackground

@@ -23,6 +23,7 @@ export const profileUpdateViewModel = (user: User ) => {
 
 
     const [values, setValues] = useState(user);
+    console.log(values)
     const [loading, setLoading] = useState(false)
 
     const [file, setFile] = useState<ImagePicker.ImagePickerAsset>();

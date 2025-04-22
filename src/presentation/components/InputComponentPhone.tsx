@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { IconComponent } from "./IconComponent";
@@ -29,15 +29,26 @@ export const PhoneNumberInputComponent = ({
     const [countryCode, setCountryCode] = useState("+56");
     const [phoneNumber, setPhoneNumber] = useState("");
 
+    useEffect(() => {
+        if (value) {
+            const matchedCountry = countries.find((c) => value.startsWith(c.value));
+            const code = matchedCountry ? matchedCountry.value : "+56";
+            const number = value.replace(code, "");
+
+            setCountryCode(code);
+            setPhoneNumber(number);
+        }
+    }, [value]);
+
     const handlePhoneChange = (text: string) => {
-        const cleanedNumber = text.replace(/[^0-9]/g, ""); // Limpiar el input
+        const cleanedNumber = text.replace(/[^0-9]/g, "");
         setPhoneNumber(cleanedNumber);
-        onChangeText(property, `${countryCode}${cleanedNumber}`); // Concatenar código de país
+        onChangeText(property, `${countryCode}${cleanedNumber}`);
     };
 
-    const handleCountryChange = (value: string) => {
-        setCountryCode(value);
-        onChangeText(property, `${value}${phoneNumber}`); // Actualizar con el nuevo código de país
+    const handleCountryChange = (newCode: string) => {
+        setCountryCode(newCode);
+        onChangeText(property, `${newCode}${phoneNumber}`);
     };
 
     return (
@@ -64,6 +75,7 @@ export const PhoneNumberInputComponent = ({
         </View>
     );
 };
+
 
 
 const styles = StyleSheet.create({
