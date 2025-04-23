@@ -4,6 +4,7 @@ import { ClientOrderListScreen } from '../screens/client/category/order/list/Ord
 import { ProfileInfoScreen } from '../screens/profile/info/ProfileInfo';
 import { IconComponent } from '../components/IconComponent';
 import { globalColors } from '../theme/GlobalTheme';
+import { ClientStackNavigator } from './ClientStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +29,7 @@ export const ClientBottomTabsnavigator = () => {
                         <IconComponent icon="reorder-four-outline" color={color} size={26} />
                     )
                 }}
-                name="ClientCategoryListScreen" component={ClientCategoryListScreen} />
+                name="ClientStackNavigator" component={ClientStackNavigator} />
             <Tab.Screen
                 options={{
                     headerShown: false,
