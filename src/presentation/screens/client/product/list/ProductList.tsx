@@ -4,6 +4,7 @@ import useViewModel from './ViewModel'
 import { StackScreenProps } from '@react-navigation/stack'
 import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator'
 import { FlatList } from 'react-native-gesture-handler'
+import { ClientProductListItem } from './ItemProduct'
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientProductListScreen'> { };
 
@@ -17,15 +18,11 @@ export const ClientProductListScreen = ({ navigation, route }: Props) => {
     }, [])
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1}}>
             <FlatList
                 data={products}
-                renderItem={(item) => (
-                    <View style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
-                        <Text>{item.item.name}</Text>
-                        <Text>{item.item.price}</Text>
-                    </View>
-                )}
+                keyExtractor={(item) => item.id!}
+                renderItem={({item}) => <ClientProductListItem product={item} navigation={navigation}/>}
             />
         </View>
     )
