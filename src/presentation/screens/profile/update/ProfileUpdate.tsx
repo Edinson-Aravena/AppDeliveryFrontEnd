@@ -98,7 +98,7 @@ export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
                         onChangeText={onChange}
                     />
 
-                    <View>
+                    <View style={{ marginTop: 10 }}>
                         <RoundedButtonComponent text='ACTUALIZAR' onPress={() => {
                             update()
                         }} />

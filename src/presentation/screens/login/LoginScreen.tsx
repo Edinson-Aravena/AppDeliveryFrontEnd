@@ -75,7 +75,7 @@ export const LoginScreen = ({navigation, route}:Props) => {
                         secureTextEntry={true}
                     />
 
-                    <View>
+                    <View style={{ marginTop: 20 }}>
                         <RoundedButtonComponent text='ENTRAR' onPress={ login } />
                     </View>
 

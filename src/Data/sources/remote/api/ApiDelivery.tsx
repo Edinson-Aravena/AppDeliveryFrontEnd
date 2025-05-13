@@ -4,14 +4,14 @@ import { LocalStorage } from '../../local/LocalStorage'
 
 
 const ApiDelivery = axios.create({
-    baseURL: 'http://192.168.21.58:3000/api',
+    baseURL: 'http://192.168.8.106:3000/api',
     headers: {
         'Content-Type': 'application/json'
     }
 })
 
 const ApiDeliveryForImage = axios.create({
-    baseURL: 'http://192.168.21.58:3000/api',
+    baseURL: 'http://192.168.8.106:3000/api',
     headers: {
         'Content-Type': 'multipart/form-data',
         'accept':'application/json'
