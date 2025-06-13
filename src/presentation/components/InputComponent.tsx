@@ -10,6 +10,7 @@ interface InputProps {
     keyboardType: KeyboardTypeOptions;
     secureTextEntry?: boolean;
     property: string;
+    editable?: boolean;
     onChangeText: (property: string, value: any) => void;
 }
 
@@ -20,6 +21,7 @@ export const InputComponent = ({
     keyboardType,
     secureTextEntry = false,
     property,
+    editable = true,
     onChangeText }: InputProps) => {
 
     return (
@@ -32,6 +34,7 @@ export const InputComponent = ({
                 value={value}
                 onChangeText={text => onChangeText(property, text)}
                 secureTextEntry={secureTextEntry}
+                editable={editable}
             />
         </View>
     );

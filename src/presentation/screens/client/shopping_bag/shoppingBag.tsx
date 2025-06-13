@@ -5,8 +5,13 @@ import { FlatList } from 'react-native-gesture-handler'
 import { ShoppingBagItem } from './Item'
 import { RoundedButtonComponent } from '../../../components'
 import { StyleSheet } from "react-native"
+import { ClientStackParamList } from '../../../navigator/ClientStackNavigator'
+import { StackScreenProps } from '@react-navigation/stack'
 
-export const ClientshoppingBagScreen = () => {
+interface Props extends StackScreenProps<ClientStackParamList, 'ClientShoppingBagScreen'> { }
+
+
+export const ClientShoppingBagScreen = ({navigation, route}: Props) => {
 
     const { shoppingBag, total, addItem, deleteItem, subtractItem} = useViewModel();
 
@@ -33,7 +38,7 @@ export const ClientshoppingBagScreen = () => {
                 </View>
 
                 <View style={styles.buttonAdd}>
-                    <RoundedButtonComponent text='Pagar' onPress={() => { }} />
+                    <RoundedButtonComponent text='Pagar' onPress={() => {navigation.navigate('ClientAddressListScreen'), console.log("ir a addres")}} />
                 </View>
             </View>
         </View>

@@ -1,5 +1,6 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { Text, StyleSheet } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { globalColors } from '../theme/GlobalTheme'
 
 interface RoundedButtonProps {

@@ -7,13 +7,19 @@ import { Product } from "../../domain/entities/Product";
 import { ShoppingBagProvider } from "../context/ShoppingBagContext";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { IconComponent } from '../components/IconComponent';
-import { ClientshoppingBagScreen } from "../screens/client/shopping_bag/shoppingBag";
+import { ClientShoppingBagScreen } from "../screens/client/shopping_bag/shoppingBag";
+import { ClientAddressListScreen } from "../screens/client/address/list/AddressList";
+import { ClientAddresstCreateScreen } from "../screens/client/address/create/AddressCreate";
+import { ClientAddressMapScreen } from "../screens/client/address/map/AddressMap";
 
 export type ClientStackParamList = {
     ClientCategoryListScreen: undefined;
     ClientProductListScreen: { idCategory: string };
     ClientProductDetailScreen: { product: Product };
     ClientShoppingBagScreen: undefined;
+    ClientAddressListScreen: undefined;
+    ClientAddressCreateScreen: {refPoint: string, latitude: number, longitude: number} | undefined;
+    ClientAddressMapScreen: undefined;
 }
 
 const Stack = createNativeStackNavigator<ClientStackParamList>();
@@ -67,14 +73,47 @@ export const ClientStackNavigator = () => {
                     options={{
                         title: 'Mi orden',
                         headerShown: true,
-                        headerTitleAlign: 'center',
-                        headerTintColor: 'white',
-                        headerStyle: {
-                            backgroundColor: globalColors.buttons,
-                        },
                     }}
-                    name="ClientShoppingBagScreen" component={ClientshoppingBagScreen} />
-                
+                    name="ClientShoppingBagScreen" component={ClientShoppingBagScreen} />
+
+                <Stack.Screen
+                    options={({ route, navigation }) => ({
+                        title: 'Mis direcciones',
+                        headerShown: true,
+                        
+                        headerRight: () => (
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('ClientAddressCreateScreen')}
+                                style={{
+                                    marginRight: 10,
+                                }}
+                            >
+                                <IconComponent icon="add-circle-outline" color={globalColors.buttons} size={26} />
+                            </TouchableOpacity>
+                        ),
+                        headerTransparent: true,
+                    })}
+                    name="ClientAddressListScreen" component={ClientAddressListScreen} />
+
+                <Stack.Screen
+                    name="ClientAddressCreateScreen"
+                    component={ClientAddresstCreateScreen}
+                    options={{
+                        title: 'Crear dirección',
+                        headerShown: true,
+                        headerTransparent: true,
+                    }}
+                />
+
+                <Stack.Screen
+                    name="ClientAddressMapScreen"
+                    component={ClientAddressMapScreen}
+                    options={{
+                        title: 'Ubica tu dirección',
+                        headerShown: true,
+                    }}
+                />
+
             </Stack.Navigator>
         </ShoppingBagState>
 
