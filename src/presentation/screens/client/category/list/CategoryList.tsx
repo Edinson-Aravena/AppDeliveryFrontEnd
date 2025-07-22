@@ -1,9 +1,7 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../../navigator/StackNavigator';
 import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { View, Text, Dimensions } from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
+import { View, Text, Dimensions, FlatList, StyleSheet } from 'react-native';
 import { IconComponent } from '../../../../components/IconComponent';
 import { globalColors } from '../../../../theme/GlobalTheme';
 import { useEffect, useState } from 'react';
@@ -12,44 +10,89 @@ import useViewModel from './ViewModel';
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientCategoryListScreen'> { }
 
-export const ClientCategoryListScreen = ({navigation, route}:Props) => {
-
+export const ClientCategoryListScreen = ({ navigation, route }: Props) => {
     const { categories, getCategories } = useViewModel();
-    const width = Dimensions.get('window').width;
-    const height = Dimensions.get('window').height;
-    const [mode, setMode] = useState<any>('horizontal-stack')
-    const [snapDirection, setSnapDirection] = useState<'left' | 'right'>('left')
+    const [numColumns, setNumColumns] = useState(2); // Default 2 columns
 
     useEffect(() => {
-        getCategories()
-    }, [])
-    
+        getCategories();
+        // Ajustar número de columnas según el tamaño de pantalla
+        const { width } = Dimensions.get('window');
+        setNumColumns(width > 600 ? 3 : 2); // 3 columnas para tablets, 2 para móviles
+    }, []);
+
+    // Calcular el tamaño de cada item
+    const { width } = Dimensions.get('window');
+    const itemSize = (width - 40) / numColumns; // 40 = padding horizontal (20*2) + margin entre items
+
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' }}>
+            <View style={styles.container}>
+                
+                <Text style={styles.title}>
                     Explora nuestras categorías
                 </Text>
-                <Carousel
-                    width={width * 0.8}
-                    height={height * 0.6}
+                
+                <FlatList
                     data={categories}
-                    renderItem={({ item }) => <ClientCategoryItem category={item} height={height * 0.62} width={width * 1} navigation={navigation} />}
-                    modeConfig={{
-                        snapDirection,
-                        stackInterval: 30
-                    }}
-                    mode={mode}
+                    renderItem={({ item }) => (
+                        <ClientCategoryItem 
+                            category={item} 
+                            size={itemSize} 
+                            navigation={navigation} 
+                        />
+                    )}
+                    keyExtractor={(item) => item.id!}
+                    numColumns={numColumns}
+                    contentContainerStyle={styles.gridContainer}
+                    columnWrapperStyle={styles.columnWrapper}
+                    ListFooterComponent={
+                        <View style={styles.footer}>
+                            <Text style={styles.footerText}>Desplaza para ver más</Text>
+                            <IconComponent 
+                                icon={'chevron-down'} 
+                                color={globalColors.info} 
+                                size={30} 
+                            />
+                        </View>
+                    }
                 />
-                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold',textAlign: 'center', color: globalColors.info }}>Deliza</Text>
-                    <IconComponent icon={'arrow-forward-outline'} color={globalColors.info} size={40} />
-                </View>
             </View>
-
         </GestureHandlerRootView>
+    );
+};
 
-    )
-}
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: globalColors.background,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+        color: globalColors.title,
+    },
+    gridContainer: {
+        paddingBottom: 20,
+    },
+    columnWrapper: {
+        justifyContent: 'space-between',
+        marginBottom: 15,
+    },
+    footer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    footerText: {
+        fontSize: 16,
+        color: globalColors.info,
+        marginRight: 10,
+    },
+});
 
 export default ClientCategoryListScreen;

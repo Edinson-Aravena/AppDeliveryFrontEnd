@@ -75,7 +75,7 @@ export const RestaurantCategoryCreateScreen = () => {
                         onChangeText={onChange}
                     />
 
-                    <View>
+                    <View style={{marginTop: 20, marginBottom: 10}}>
                         <RoundedButtonComponent text='CREAR CATEGORÍA' onPress={() => {
                             createCategory()
                         }} />

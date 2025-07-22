@@ -39,10 +39,10 @@ const LoginViewModel = () => {
     const isValidForm = (): boolean => {
 
         if (values.email === "") {
-            setErrorMessage("Ingrese el email")
+            setErrorMessage("Rellene los campos")
         }
         if (values.password === "") {
-            setErrorMessage("Ingrese la contraseña")
+            setErrorMessage("Rellene los campos")
         }
         return true;
     }

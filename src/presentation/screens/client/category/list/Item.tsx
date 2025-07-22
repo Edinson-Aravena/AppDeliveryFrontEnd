@@ -1,23 +1,22 @@
-import React from 'react'
-import { TouchableOpacity, View, Image, Text, StyleSheet } from 'react-native'
+import React from 'react';
+import { TouchableOpacity, View, Image, Text, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Category } from '../../../../../domain/entities/Category';
 import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator';
 import { globalColors } from '../../../../theme/GlobalTheme';
 
 interface Props {
-    category: Category
-    height: number,
-    width: number,
-    navigation: StackNavigationProp<ClientStackParamList, "ClientCategoryListScreen", undefined>
+    category: Category;
+    size: number;
+    navigation: StackNavigationProp<ClientStackParamList, "ClientCategoryListScreen", undefined>;
 }
 
-export const ClientCategoryItem = ({ height, category, width, navigation }: Props) => {
+export const ClientCategoryItem = ({ category, size, navigation }: Props) => {
     return (
         <TouchableOpacity
-            style={{ ...styles.container, height: height, width: width - 100 }}
+            style={[styles.container, { width: size, height: size }]}
             onPress={() => {
-                navigation.navigate("ClientProductListScreen", { idCategory: category.id!})
+                navigation.navigate("ClientProductListScreen", { idCategory: category.id! })
             }}
         >
             <View style={styles.imageContainer}>
@@ -25,41 +24,46 @@ export const ClientCategoryItem = ({ height, category, width, navigation }: Prop
                     style={styles.image}
                     source={{ uri: category.image }}
                 />
-                <View style={styles.titleContainer} >
-                    <Text style={styles.title}>{category.name}</Text>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title} numberOfLines={2}>{category.name}</Text>
                 </View>
             </View>
         </TouchableOpacity>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
-        alignSelf: "center",
-        paddingBottom: 20,
-        paddingHorizontal: 7
+        borderRadius: 12,
+        overflow: 'hidden',
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        backgroundColor: 'white',
+        marginHorizontal: 5,
     },
     imageContainer: {
         flex: 1,
-        backgroundColor: globalColors.background,
-        borderRadius: 18,
     },
     image: {
         flex: 1,
-        borderTopLeftRadius: 18,
-        borderTopRightRadius: 18,
+        width: '100%',
+        resizeMode: 'cover',
     },
     titleContainer: {
-        height: 50,
-        backgroundColor: globalColors.buttons,
-        borderBottomLeftRadius: 18,
-        borderBottomRightRadius: 18,
-        alignItems: 'center',
-        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        padding: 8,
     },
     title: {
         color: 'white',
-        fontSize: 20,
-    }
-
-})
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+});

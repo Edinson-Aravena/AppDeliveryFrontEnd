@@ -2,22 +2,39 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Address } from '../../../../../domain/entities/Address';
 import { GetByUserAddressUseCase } from '../../../../../domain/useCases/address/GetByUserAddress';
 import { UserContext } from '../../../../context/UserContext';
-
+import { CreateOrderUseCase } from '../../../../../domain/useCases/order/CreateOrder';
+import { Order } from '../../../../../domain/entities/Order';
+import { ShoppingBagContext } from '../../../../context/ShoppingBagContext';
 
 
 const ClientAddressListViewModel = () => {
 
     const [address, setAddress] = useState<Address[]>([])
     const { user, saveUserSession, getUserSession } = useContext(UserContext);
-    const [checked, setchecked] = useState('')
+    const {shoppingBag} = useContext(ShoppingBagContext)
+    const [checked, setchecked] = useState('');
+    const [responseMessage, setResponseMessage] = useState('')
 
     useEffect(() => {
         getAddress();
         if (user.address !==null && user.address !== undefined){
             changeRadioValue(user.address!)
-            console.log("User in Address List ViewModel: ", user);
+            console.log("Usuario de sesion : ", JSON.stringify(user));
         }   
     }, [user])
+
+    const createOrder = async () => {
+
+        const order: Order = {
+            id_client: user.id!,
+            id_address: user.address?.id!,
+            products: shoppingBag
+        }
+        const result = await CreateOrderUseCase(order);
+
+        setResponseMessage(result.message);
+        
+    }
     
     const changeRadioValue = (address: Address) => {
         setchecked(address.id!);
@@ -33,6 +50,8 @@ const ClientAddressListViewModel = () => {
     return{
         address,
         checked,
+        responseMessage,
+        createOrder,
         getAddress,
         changeRadioValue
     }

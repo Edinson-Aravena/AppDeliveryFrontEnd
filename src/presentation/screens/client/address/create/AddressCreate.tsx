@@ -16,6 +16,14 @@ export const ClientAddresstCreateScreen = ({ navigation, route }: Props) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
+    if (responseMessage === 'La dirección se creo correctamente') {
+    navigation.reset({
+        index: 0,
+        routes: [{ name: 'ClientAddressListScreen' }],
+    });
+}
+
+
     useEffect(() => {
         if (route.params?.refPoint) {
             onChangeRefPoint(route.params.refPoint, route.params.latitude, route.params.longitude);
@@ -25,8 +33,8 @@ export const ClientAddresstCreateScreen = ({ navigation, route }: Props) => {
     useEffect(() => {
         if (responseMessage) {
             ToastAndroid.show(responseMessage, ToastAndroid.SHORT);
-            if (responseMessage === 'Dirección creada correctamente') {
-                navigation.pop();
+            if (responseMessage === 'La dirección se creo correctamente') {
+                navigation.navigate('ClientAddressListScreen');
             }
         }
     }
@@ -60,23 +68,43 @@ export const ClientAddresstCreateScreen = ({ navigation, route }: Props) => {
                         style={{ color: globalColors.title, fontWeight: "bold", marginTop: 10 }}
                     />
 
-                    <InputComponent
-                        icon={'home-outline'}
-                        placeholder={'Dirección'}
-                        value={address}
-                        keyboardType={'default'}
-                        property='address'
-                        onChangeText={onChange}
-                    />
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={() => {
+                            if (!refPoint) {
+                                ToastAndroid.show('Primero debes ingresar el punto de referencia', ToastAndroid.SHORT);
+                            }
+                        }}
+                    >
+                        <InputComponent
+                            icon={'home-outline'}
+                            placeholder={'Dirección'}
+                            value={address}
+                            keyboardType={'default'}
+                            property='address'
+                            onChangeText={onChange}
+                            editable={!!refPoint}
+                        />
+                    </TouchableOpacity>
 
-                    <InputComponent
-                        icon={'document-text-outline'}
-                        placeholder={'Población/Villa'}
-                        value={neighborhood}
-                        keyboardType={'default'}
-                        property='neighborhood'
-                        onChangeText={onChange}
-                    />
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={() => {
+                            if (!refPoint) {
+                                ToastAndroid.show('Primero debes ingresar el punto de referencia', ToastAndroid.SHORT);
+                            }
+                        }}
+                    >
+                        <InputComponent
+                            icon={'document-text-outline'}
+                            placeholder={'Población/Villa'}
+                            value={neighborhood}
+                            keyboardType={'default'}
+                            property='neighborhood'
+                            onChangeText={onChange}
+                            editable={!!refPoint}
+                        />
+                    </TouchableOpacity>
 
                     <TouchableOpacity
                         onPress={() => { navigation.navigate('ClientAddressMapScreen') }}

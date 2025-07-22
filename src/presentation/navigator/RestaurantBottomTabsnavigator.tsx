@@ -1,10 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/orderList';
+import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/OrderList';
 import { ProfileInfoScreen } from '../screens/profile/info/ProfileInfo';
 import { IconComponent } from '../components';
 import { RestaurantCategoryNavigator } from './RestaurantCategoryNavigator';
 import { TouchableOpacity } from 'react-native';
 import { globalColors } from '../theme/GlobalTheme';
+import { RestaurantOrderStackNavigator } from './RestaurantOrderStackNavigator';
 
 
 const Tab = createBottomTabNavigator();
@@ -44,7 +45,7 @@ export const RestaurantBottomTabsnavigator = () => {
                         <IconComponent icon="clipboard-outline" color={color} size={26} />
                     )
                 }}
-                name="RestaurantOrderListScreen" component={RestaurantOrderListScreen} />
+                name="RestaurantOrderStackNavigator" component={RestaurantOrderStackNavigator} />
             <Tab.Screen
                 options={{
                     headerShown: false,

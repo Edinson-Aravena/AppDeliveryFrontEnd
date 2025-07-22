@@ -21,9 +21,10 @@ export const ModalPickImage = ({ openGallery, openCamera, modalUseState, setModa
                     transparent={true}
                     visible={modalUseState}
                     onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
+                        Alert.alert('El modal ha sido cerrado.');
                         setModalUseState(!modalUseState);
-                    }}>
+                    }}
+                    >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <Text>Selecciona una opción</Text>
@@ -32,6 +33,7 @@ export const ModalPickImage = ({ openGallery, openCamera, modalUseState, setModa
                                 onPress={() => {
                                     openGallery(),
                                     setModalUseState(false)
+                                    console.log("Abrir galería")
                                 }}
                             />
                             <RoundedButtonComponent
@@ -39,6 +41,7 @@ export const ModalPickImage = ({ openGallery, openCamera, modalUseState, setModa
                                 onPress={() => {
                                     openCamera(),
                                     setModalUseState(false)
+                                    console.log("Abrir cámara")
                                 }}
                             />
                         </View>

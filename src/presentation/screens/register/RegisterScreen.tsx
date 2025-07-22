@@ -118,7 +118,7 @@ export const RegisterScreen = ({ navigation, route }: Props) => {
                         secureTextEntry={true}
                     />
 
-                    <View>
+                    <View style={{ marginTop: 10 }}>
                         <RoundedButtonComponent text='REGISTRARSE' onPress={() => {
                             register()
                         }} />
