@@ -1,18 +1,19 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
-import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/OrderList';
-import { RestauranteOrderDetailScreen } from '../screens/restaurante/order/detail/OrderDetail';
 import { Order } from '../../domain/entities/Order';
 import { OrderProvider } from '../context/OrderContext';
 
+import { DeliveryOrderDetailScreen } from '../screens/delivery/order/detail/OrderDetail';
+import { DeliveryOrderListScreen } from '../screens/delivery/order/list/OrderList';
 
-export type RestaurantOrderStackParamList = {
-    RestaurantOrderListScreen: undefined;
-    RestauranteOrderDetailScreen: { order: Order };
+
+export type DeliveryOrderStackParamList = {
+    DeliveryOrderListScreen: undefined;
+    DeliveryOrderDetailScreen: { order: Order };
 }
-const Stack = createNativeStackNavigator<RestaurantOrderStackParamList>();
+const Stack = createNativeStackNavigator<DeliveryOrderStackParamList>();
 
-export const RestaurantOrderStackNavigator = () => {
+export const DeliveryOrderStackNavigator = () => {
     return (
         <OrderStatus>
             <Stack.Navigator
@@ -23,12 +24,12 @@ export const RestaurantOrderStackNavigator = () => {
                 }
             >
                 <Stack.Screen
-                    name="RestaurantOrderListScreen"
-                    component={RestaurantOrderListScreen}
+                    name="DeliveryOrderListScreen"
+                    component={DeliveryOrderListScreen}
                 />
                 <Stack.Screen
-                    name="RestauranteOrderDetailScreen"
-                    component={RestauranteOrderDetailScreen}
+                    name="DeliveryOrderDetailScreen"
+                    component={DeliveryOrderDetailScreen}
                     options={{
                         headerShown: true,
                         title: 'Detalle de la orden',

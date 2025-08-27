@@ -7,6 +7,7 @@ import { OrdenListItem } from './Item';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RestaurantOrderStackParamList } from '../../../../navigator/RestaurantOrderStackNavigator';
+import { DeliveryOrderStackParamList } from '../../../../navigator/DeliveryOrderStackNavigator';
 
 interface Props {
     status: string;
@@ -14,21 +15,19 @@ interface Props {
 
 const OrderListView = ({ status }: Props) => {
 
-    const { getOrders, ordersPayed, ordersDispatched, ordersOnTheWay, ordersDelivery} = useViewModel();
-    // Replace 'RootStackParamList' with your actual stack param list type
-    const navigation = useNavigation<StackNavigationProp<RestaurantOrderStackParamList, 'RestaurantOrderListScreen'>>();
+    const { getOrders, ordersPayed, ordersDispatched, ordersOnTheWay, ordersDelivery, user} = useViewModel();
+
+    const navigation = useNavigation<StackNavigationProp<DeliveryOrderStackParamList, 'DeliveryOrderListScreen'>>();
 
     useEffect(() => {
-        getOrders(status);
-    }, []);
+        getOrders(user?.id!, status);
+    }, [user]);
 
     return (
         <View>
             <FlatList
                 data={
-                    status === 'PAGADO' 
-                    ? ordersPayed 
-                    : status === 'DESPACHADO' 
+                    status === 'DESPACHADO' 
                     ? ordersDispatched 
                     : status === 'EN CAMINO' 
                     ? ordersOnTheWay
@@ -46,8 +45,6 @@ const OrderListView = ({ status }: Props) => {
 
 const renderScene = ({ route }: any) => {
     switch (route.key) {
-        case 'first':
-            return <OrderListView status="PAGADO" />;
         case 'second':
             return <OrderListView status="DESPACHADO" />;
         case 'third':
@@ -55,16 +52,15 @@ const renderScene = ({ route }: any) => {
         case 'fourth':
             return <OrderListView status="ENTREGADO" />;
         default:
-            return null;
+            return <OrderListView status="DESPACHADO" />;
     }
 }
 
-export const RestaurantOrderListScreen = () => {
+export const DeliveryOrderListScreen = () => {
     const layout = useWindowDimensions();
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
-        { key: 'first', title: 'PAGADO' },
         { key: 'second', title: 'DESPACHADO' },
         { key: 'third', title: 'EN CAMINO' },
         { key: 'fourth', title: 'ENTREGADO' },

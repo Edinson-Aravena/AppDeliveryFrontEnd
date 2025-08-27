@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Order } from '../../../../../domain/entities/Order'
-import {GetDeliveryMenUserUseCase } from '../../../../../domain/useCases/user/GetDeliveryMenUser'
+import { GetDeliveryMenUserUseCase } from '../../../../../domain/useCases/user/GetDeliveryMenUser'
 import { User } from '../../../../../domain/entities/User';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { UpdateToDispatchedUseCase } from '../../../../../domain/useCases/order/UpdateToDispatched';
+import { OrderContext } from '../../../../context/OrderContext';
 
-interface DropDownProps{
+interface DropDownProps {
     label: string;
     value: string;
 }
@@ -13,16 +14,27 @@ const RestauranteDetailViewModel = (order: Order) => {
 
     const [total, setTotal] = useState(0);
     const [deliveryMen, setDeliveryMen] = useState<User[]>([]);
+    const [responseMessage, setResponseMessage] = useState('')
 
     const [value, setValue] = useState(null);
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState<DropDownProps[]>([]);
-    
+    const {updateToDispatched} = useContext(OrderContext);
+
     useEffect(() => {
         setDropDownItems();
     }, [deliveryMen]);
 
-    const distpatchOrder = () => {
+    const distpatchOrder = async () => {
+
+        if (value !== null) {
+            order.id_delivery = value!;
+            const result = await updateToDispatched(order);
+            setResponseMessage(result.message!);
+        } else {
+            setResponseMessage('Selecciona un repartidor');
+        }
+
         console.log('Repartir pedido a: ' + value);
     }
 
@@ -52,16 +64,18 @@ const RestauranteDetailViewModel = (order: Order) => {
 
     return {
         total,
-        getTotal,
         deliveryMen,
-        getDeliveryMen,
         value,
         open,
         items,
+        responseMessage,
+        setResponseMessage,
         setOpen,
         setValue,
         setItems,
         distpatchOrder,
+        getDeliveryMen,
+        getTotal,
     }
 
 }

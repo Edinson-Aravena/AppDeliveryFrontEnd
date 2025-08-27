@@ -9,6 +9,7 @@ import { ClientBottomTabsnavigator } from './ClientBottomTabsnavigator copy';
 import { ProfileUpdateScreen } from '../screens/profile/update/ProfileUpdate';
 import { User } from '../../domain/entities/User';
 import { UserProvider } from '../context/UserContext';
+import { DeliveryBottomTabsnavigator } from './DeliveryBottomTabsnavigator';
 
 
 export type RootStackParamList = {
@@ -18,7 +19,7 @@ export type RootStackParamList = {
     ClientBottomTabsnavigator: undefined,
     RestaurantBottomTabsnavigator: undefined,
     ProfileUpdateScreen: { user: User },
-    
+    DeliveryBottomTabsnavigator: undefined,
 }
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -52,6 +53,10 @@ export const StackNavigator = () => {
                     <Stack.Screen
                         name="ClientBottomTabsnavigator"
                         component={ClientBottomTabsnavigator}
+                    />
+                    <Stack.Screen
+                        name="DeliveryBottomTabsnavigator"
+                        component={DeliveryBottomTabsnavigator}
                     />
                     <Stack.Screen
                         name="ProfileUpdateScreen"

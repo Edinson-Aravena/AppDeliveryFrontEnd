@@ -9,25 +9,25 @@ import { globalColors } from '../../../../theme/GlobalTheme'
 import useViewModel from './ViewModel'
 import { RoundedButtonComponent } from '../../../../components/RoundedButtonComponent'
 import { Dropdown } from 'react-native-element-dropdown';
+import { DeliveryOrderStackParamList } from '../../../../navigator/DeliveryOrderStackNavigator'
 
-interface Props extends StackScreenProps<RestaurantOrderStackParamList, 'RestauranteOrderDetailScreen'> { };
+interface Props extends StackScreenProps<DeliveryOrderStackParamList, 'DeliveryOrderDetailScreen'> { };
 
-export const RestauranteOrderDetailScreen = ({ navigation, route }: Props) => {
+export const DeliveryOrderDetailScreen = ({ navigation, route }: Props) => {
 
     const { order } = route.params;
-    const { total, getTotal, deliveryMen, responseMessage, setResponseMessage, getDeliveryMen, items, open, value, setItems, setOpen, setValue, distpatchOrder } = useViewModel(order);
+    const { total, getTotal, deliveryMen, responseMessage, items, open, value, setResponseMessage, setItems, setOpen, setValue, updateToOnTheWayOrder } = useViewModel(order);
 
     useEffect(() => {
         if (responseMessage !== '') {
             ToastAndroid.show(responseMessage, ToastAndroid.LONG);
-        } 
+        }
     }, [responseMessage])
 
     useEffect(() => {
         if (total === 0) {
             getTotal();
         }
-        getDeliveryMen();
     }, []);
 
 
@@ -73,36 +73,22 @@ export const RestauranteOrderDetailScreen = ({ navigation, route }: Props) => {
                         <Text style={styles.value}>{order.address?.address}, {order.address?.neighborhood}</Text>
                     </View>
                 </View>
-                {
-                    order.status === 'PAGADO'
-                        ? <View>
-                            <Text style={styles.deliveries}>REPARTIDORES DISPONIBLES</Text>
 
-                            <View style={styles.dropDown}>
-                                <Dropdown
-                                    style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, marginTop: 5 }}
-                                    data={items}
-                                    labelField="label"
-                                    valueField="value"
-                                    placeholder="Selecciona un repartidor"
-                                    value={value}
-                                    onChange={item => {
-                                        setValue(item.value);
-                                    }}
-                                />
-                            </View>
-                        </View>
-                        : <Text style={styles.deliveries}>REPARTIDOR ASIGNADO: {order.delivery?.name}</Text>
-                }
+                <View style={{ marginTop: 10 }}>
+                    <Text style={styles.deliveries}>REPARTIDOR ASIGNADO:</Text>
+                    <Text style={styles.deliveryName}>{order.delivery?.name} {order.delivery?.lastname}</Text>
+                </View>
+
+
 
                 <View style={styles.totalInfo}>
                     <Text style={styles.total}>Total: ${total}</Text>
                     <View style={styles.button}>
                         {
-                            order.status === 'PAGADO' &&
+                            order.status === 'DESPACHADO' &&
                             <RoundedButtonComponent
-                                text="DESPACHAR PEDIDO"
-                                onPress={() => distpatchOrder()}
+                                text="INICIAR ENTREGA"
+                                onPress={() => updateToOnTheWayOrder()}
                             />
                         }
                     </View>
@@ -151,7 +137,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 20,
         marginBottom: 10,
+
+    },
+    deliveryName: {
+        fontSize: 20,
         color: globalColors.buttons,
+        fontWeight: 'bold',
+        marginTop: 5
     },
     totalInfo: {
         marginTop: 20,

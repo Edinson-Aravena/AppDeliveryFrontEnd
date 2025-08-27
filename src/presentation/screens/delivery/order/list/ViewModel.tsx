@@ -2,14 +2,16 @@ import React, { useContext, useState } from 'react'
 import { GetByStatusOrderUseCase } from '../../../../../domain/useCases/order/GetByStatusOrder';
 import { Order } from '../../../../../domain/entities/Order';
 import { OrderContext } from '../../../../context/OrderContext';
+import { UserContext } from '../../../../context/UserContext';
 
-const RestaurantOrderListViewModel = () => {
+const DeliveryOrderListViewModel = () => {
 
     //const [orders, setOrders] = useState<Order[]>([])
-    const {ordersPayed, ordersDispatched, ordersOnTheWay, ordersDelivery, getOrdersByStatus} = useContext(OrderContext);
-    
-    const getOrders = async (status: string) => {
-        const result = await getOrdersByStatus(status);
+    const {ordersPayed, ordersDispatched, ordersOnTheWay, ordersDelivery, getOrdersByDeliveryAndStatus} = useContext(OrderContext);
+    const {user} = useContext(UserContext);
+
+    const getOrders = async (idDelivery: string, status: string) => {
+        const result = await getOrdersByDeliveryAndStatus(idDelivery, status);
         //setOrders(result);
         console.log('Ordenes obtenidas:', JSON.stringify(result, null, 2));
     }
@@ -19,8 +21,9 @@ const RestaurantOrderListViewModel = () => {
         ordersPayed,
         ordersDispatched,
         ordersOnTheWay,
-        ordersDelivery
+        ordersDelivery,
+        user
     }
 }
 
-export default RestaurantOrderListViewModel;
+export default DeliveryOrderListViewModel;

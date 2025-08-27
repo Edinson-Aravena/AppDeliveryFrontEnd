@@ -5,6 +5,7 @@ import { User } from "./User";
 export interface Order {
     id?: string;
     id_client: string;
+    id_delivery?: string;
     id_address: string;
     status?: string;
     lat?: number;
