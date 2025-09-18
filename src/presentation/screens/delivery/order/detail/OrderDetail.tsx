@@ -16,7 +16,7 @@ interface Props extends StackScreenProps<DeliveryOrderStackParamList, 'DeliveryO
 export const DeliveryOrderDetailScreen = ({ navigation, route }: Props) => {
 
     const { order } = route.params;
-    const { total, getTotal, deliveryMen, responseMessage, items, open, value, setResponseMessage, setItems, setOpen, setValue, updateToOnTheWayOrder } = useViewModel(order);
+    const { total, getTotal, deliveryMen, responseMessage, items, open, value, setResponseMessage, setItems, setOpen, setValue, updateToOnTheWayOrder, updateToDeliveredOrder} = useViewModel(order);
 
     useEffect(() => {
         if (responseMessage !== '') {
@@ -85,14 +85,25 @@ export const DeliveryOrderDetailScreen = ({ navigation, route }: Props) => {
                     <Text style={styles.total}>Total: ${total}</Text>
                     <View style={styles.button}>
                         {
-                            order.status === 'DESPACHADO' &&
-                            <RoundedButtonComponent
-                                text="INICIAR ENTREGA"
-                                onPress={() => updateToOnTheWayOrder()}
-                            />
+                            order.status === 'DESPACHADO'
+                                ? (
+                                    <RoundedButtonComponent
+                                        text="INICIAR ENTREGA"
+                                        onPress={() => updateToOnTheWayOrder()}
+                                    />
+                                )
+                                : order.status === 'EN CAMINO'
+                                    ? (
+                                        <RoundedButtonComponent
+                                            text="ENTREGAR PEDIDO"
+                                            onPress={() => updateToDeliveredOrder()}
+                                        />
+                                    )
+                                    : null
                         }
                     </View>
                 </View>
+
             </View>
         </View>
     )

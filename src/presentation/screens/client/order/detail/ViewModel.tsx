@@ -9,7 +9,7 @@ interface DropDownProps {
     value: string;
 }
 
-const RestauranteDetailViewModel = (order: Order) => {
+const ClientOrderDetailViewModel = (order: Order) => {
 
     const [total, setTotal] = useState(0);
     const [deliveryMen, setDeliveryMen] = useState<User[]>([]);
@@ -57,4 +57,4 @@ const RestauranteDetailViewModel = (order: Order) => {
 
 }
 
-export default RestauranteDetailViewModel;
+export default ClientOrderDetailViewModel;

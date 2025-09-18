@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.graciany.appdelivery",
+      "config": {
+        "googleMapsApiKey": "AIzaSyCNcvKdgmH8wLmLb6hx8FjSQ7FS7tAm2MU"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +27,7 @@
       "package": "com.graciany.appdelivery",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCgw_TA-TWcwLVZrmZ17-gCb7TmzBA6BVU"
+          "apiKey": "AIzaSyCNcvKdgmH8wLmLb6hx8FjSQ7FS7tAm2MU"
         }
       },
       "permissions": [

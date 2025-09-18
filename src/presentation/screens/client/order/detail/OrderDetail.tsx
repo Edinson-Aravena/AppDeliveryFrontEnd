@@ -9,13 +9,15 @@ import { globalColors } from '../../../../theme/GlobalTheme'
 import useViewModel from './ViewModel'
 import { RoundedButtonComponent } from '../../../../components/RoundedButtonComponent'
 import { Dropdown } from 'react-native-element-dropdown';
+import { DeliveryOrderStackParamList } from '../../../../navigator/DeliveryOrderStackNavigator'
+import { ClientOrderStackParamList } from '../../../../navigator/ClientOrderStackNavigator'
 
-interface Props extends StackScreenProps<RestaurantOrderStackParamList, 'RestauranteOrderDetailScreen'> { };
+interface Props extends StackScreenProps<ClientOrderStackParamList, 'ClientOrderDetailScreen'> { };
 
-export const RestauranteOrderDetailScreen = ({ navigation, route }: Props) => {
+export const ClientOrderDetailScreen = ({ navigation, route }: Props) => {
 
     const { order } = route.params;
-    const { total, getTotal, deliveryMen, responseMessage, setResponseMessage, getDeliveryMen, items, open, value, setItems, setOpen, setValue, distpatchOrder } = useViewModel(order);
+    const { total, getTotal, deliveryMen, responseMessage, items, open, value, setResponseMessage, setItems, setOpen, setValue, updateToOnTheWayOrder, updateToDeliveredOrder} = useViewModel(order);
 
     useEffect(() => {
         if (responseMessage !== '') {
@@ -27,7 +29,6 @@ export const RestauranteOrderDetailScreen = ({ navigation, route }: Props) => {
         if (total === 0) {
             getTotal();
         }
-        getDeliveryMen();
     }, []);
 
 
@@ -73,45 +74,37 @@ export const RestauranteOrderDetailScreen = ({ navigation, route }: Props) => {
                         <Text style={styles.value}>{order.address?.address}, {order.address?.neighborhood}</Text>
                     </View>
                 </View>
-                {
-                    order.status === 'PAGADO'
-                        ? <View>
-                            <Text style={styles.deliveries}>REPARTIDORES DISPONIBLES</Text>
 
-                            <View style={styles.dropDown}>
-                                <Dropdown
-                                    style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, marginTop: 5 }}
-                                    data={items}
-                                    labelField="label"
-                                    valueField="value"
-                                    placeholder="Selecciona un repartidor"
-                                    value={value}
-                                    onChange={item => {
-                                        setValue(item.value);
-                                    }}
-                                />
-                            </View>
-                        </View>
-                        : (
-                            <View style={{ marginTop: 10 }}>
-                                <Text style={styles.deliveries}>REPARTIDOR ASIGNADO</Text>
-                                <Text style={styles.deliveryName}>{order.delivery?.name} {order.delivery?.lastname}</Text>
-                            </View>
-                        )
-                }
+                <View style={{ marginTop: 10 }}>
+                    <Text style={styles.deliveries}>REPARTIDOR ASIGNADO:</Text>
+                    <Text style={styles.deliveryName}>{order.delivery?.name} {order.delivery?.lastname}</Text>
+                </View>
+
+
 
                 <View style={styles.totalInfo}>
                     <Text style={styles.total}>Total: ${total}</Text>
-                    <View style={styles.button}>
+                    {/* <View style={styles.button}>
                         {
-                            order.status === 'PAGADO' &&
-                            <RoundedButtonComponent
-                                text="DESPACHAR PEDIDO"
-                                onPress={() => distpatchOrder()}
-                            />
+                            order.status === 'DESPACHADO'
+                                ? (
+                                    <RoundedButtonComponent
+                                        text="INICIAR ENTREGA"
+                                        onPress={() => updateToOnTheWayOrder()}
+                                    />
+                                )
+                                : order.status === 'EN CAMINO'
+                                    ? (
+                                        <RoundedButtonComponent
+                                            text="ENTREGAR PEDIDO"
+                                            onPress={() => updateToDeliveredOrder()}
+                                        />
+                                    )
+                                    : null
                         }
-                    </View>
+                    </View> */}
                 </View>
+
             </View>
         </View>
     )
@@ -156,7 +149,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 20,
         marginBottom: 10,
-        
+
     },
     deliveryName: {
         fontSize: 20,
@@ -164,7 +157,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 5
     },
-
     totalInfo: {
         marginTop: 20,
         flexDirection: 'row',

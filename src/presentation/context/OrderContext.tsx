@@ -5,6 +5,8 @@ import { UpdateToDispatchedUseCase } from "../../domain/useCases/order/UpdateToD
 import { ResponseAPIDelivery } from "../../Data/sources/remote/models/ResponseApiDelivery";
 import { GetByDeliveryAndStatusOrderUseCase } from "../../domain/useCases/order/GetByDeliveryAndStatusOrder";
 import { UpdateToOnTheWayOrderUseCase } from "../../domain/useCases/order/UpdateToOnTheWay";
+import { UpdateToDeliveredUseCase } from "../../domain/useCases/order/UpdateToDelivered";
+import { GetByClientAndStatusOrderUseCase } from "../../domain/useCases/order/GetByClientAndStatusOrder";
 
 export interface OrderContextProps {
     ordersPayed: Order[];
@@ -13,8 +15,10 @@ export interface OrderContextProps {
     ordersDelivery: Order[];
     getOrdersByStatus: (status: string) => Promise<void>;
     getOrdersByDeliveryAndStatus: (idDelivery: string, status: string) => Promise<void>;
+    getOrdersByClientAndStatus: (idClient: string, status: string) => Promise<void>;
     updateToDispatched: (order: Order) => Promise<ResponseAPIDelivery>;
     updateToOnTheWay: (order: Order) => Promise<ResponseAPIDelivery>;
+    updateToDelivered: (order: Order) => Promise<ResponseAPIDelivery>;
 }
 
 export const OrderContext = createContext({} as OrderContextProps);
@@ -60,6 +64,19 @@ export const OrderProvider = ({ children }: any) => {
         }
     }
 
+    const getOrdersByClientAndStatus = async (idClient: string, status: string) => {
+        const result = await GetByClientAndStatusOrderUseCase(idClient, status);
+        if (status === 'PAGADO') {
+            setOrdersPayed(result);
+        } else if (status === 'DESPACHADO') {
+            setOrdersDispatched(result);
+        } else if (status === 'EN CAMINO') {
+            setOrdersOnTheWay(result);
+        } else if (status === 'ENTREGADO') {
+            setOrdersDelivery(result);
+        }
+    }
+
     const updateToDispatched = async (order: Order) => {
         const result = await UpdateToDispatchedUseCase(order);
         getOrdersByStatus('PAGADO');
@@ -75,6 +92,14 @@ export const OrderProvider = ({ children }: any) => {
         return result;
     }
 
+    const updateToDelivered= async (order: Order) => {
+        const result = await UpdateToDeliveredUseCase(order);
+        
+        getOrdersByDeliveryAndStatus(order.id_delivery!, 'EN CAMINO');
+        getOrdersByDeliveryAndStatus(order.id_delivery!, 'ENTREGADO');
+        return result;
+    }
+
     return (
         <OrderContext.Provider value={{
             ordersPayed,
@@ -84,7 +109,9 @@ export const OrderProvider = ({ children }: any) => {
             getOrdersByStatus,
             updateToDispatched,
             getOrdersByDeliveryAndStatus,
-            updateToOnTheWay
+            getOrdersByClientAndStatus,
+            updateToOnTheWay,
+            updateToDelivered,
         }}>
             {children}
         </OrderContext.Provider>

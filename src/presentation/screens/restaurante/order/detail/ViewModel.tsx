@@ -19,7 +19,7 @@ const RestauranteDetailViewModel = (order: Order) => {
     const [value, setValue] = useState(null);
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState<DropDownProps[]>([]);
-    const {updateToDispatched} = useContext(OrderContext);
+    const { updateToDispatched } = useContext(OrderContext);
 
     useEffect(() => {
         setDropDownItems();
@@ -28,8 +28,11 @@ const RestauranteDetailViewModel = (order: Order) => {
     const distpatchOrder = async () => {
 
         if (value !== null) {
-            order.id_delivery = value!;
-            const result = await updateToDispatched(order);
+            const orderToUpdate = {
+                ...order,
+                id_delivery: value!
+            };
+            const result = await updateToDispatched(orderToUpdate);
             setResponseMessage(result.message!);
         } else {
             setResponseMessage('Selecciona un repartidor');

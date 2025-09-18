@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, ToastAndroid, Image } from 'react-native'
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps'
 import useViewModel from './ViewModel'
 import { RoundedButtonComponent } from '../../../../components'
 import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator'
@@ -23,7 +23,7 @@ export const ClientAddressMapScreen = ({navigation, route}:Props) => {
             <MapView
                 ref={mapRef}
                 style={{ height: '100%', width: '100%' }}
-                provider={PROVIDER_GOOGLE}
+                provider={PROVIDER_DEFAULT}
                 onRegionChangeComplete={(region) => onRegionChangeComplete(region.latitude, region.longitude)}
             />
 

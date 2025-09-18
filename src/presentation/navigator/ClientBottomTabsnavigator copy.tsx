@@ -5,6 +5,7 @@ import { ProfileInfoScreen } from '../screens/profile/info/ProfileInfo';
 import { IconComponent } from '../components/IconComponent';
 import { globalColors } from '../theme/GlobalTheme';
 import { ClientStackNavigator } from './ClientStackNavigator';
+import { ClientOrderStackNavigator, ClientOrderStackParamList } from './ClientOrderStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,7 +39,7 @@ export const ClientBottomTabsnavigator = () => {
                         <IconComponent icon="clipboard-outline" color={color} size={26} />
                     )
                 }}
-                name="ClientOrderListScreen" component={ClientOrderListScreen} />
+                name="ClientOrderStackNavigator" component={ClientOrderStackNavigator} />
             <Tab.Screen
                 options={{
                     headerShown: false,
