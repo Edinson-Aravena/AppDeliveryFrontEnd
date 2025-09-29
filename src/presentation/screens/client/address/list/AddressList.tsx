@@ -5,8 +5,13 @@ import useViewModel from './ViewModel'
 import { AddressListItem } from './Item'
 import { ToastAndroid } from 'react-native'
 import { RoundedButtonComponent } from '../../../../components'
+import { StackScreenProps } from '@react-navigation/stack';
+import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator';
 
-export const ClientAddressListScreen = () => {
+interface Props extends StackScreenProps<ClientStackParamList, 'ClientAddressListScreen'>{}
+
+
+export const ClientAddressListScreen = ({navigation, route}:Props) => {
 
     const {address, checked, responseMessage, getAddress, changeRadioValue, createOrder } = useViewModel()
 
@@ -25,7 +30,8 @@ export const ClientAddressListScreen = () => {
             />
 
             <View style={{ width: '100%', paddingHorizontal: 20, paddingVertical:20 }}>
-                <RoundedButtonComponent onPress={() => createOrder() } text='Continuar' />
+                {/* <RoundedButtonComponent onPress={() => createOrder() } text='Continuar' /> */}
+                <RoundedButtonComponent onPress={() => navigation.navigate('ClientPaymentFormScreen') } text='Continuar' />
             </View>
         </View>
     )
