@@ -6,13 +6,15 @@ import {
     StyleSheet, 
     ScrollView, 
     SafeAreaView,
-    Dimensions 
+    Dimensions, 
+    ToastAndroid
 } from 'react-native'
 import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator'
 import { Dropdown } from 'react-native-element-dropdown'
 import useViewModel from './ViewModel'
 import { RoundedButtonComponent } from '../../../../components'
 import { globalColors } from '../../../../theme/GlobalTheme'
+import { ActivityIndicator } from 'react-native-paper'
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientPaymentInstallmentsScreen'> { };
 
@@ -21,11 +23,18 @@ const { width } = Dimensions.get('window');
 export const ClientPaymentInstallmentsScreen = ({ navigation, route }: Props) => {
 
     const { cardToken } = route.params;
-    const { open, value, items, setValue, getInstallments } = useViewModel(cardToken);
+    const { open, value, items, responseMessage, loading, setValue, getInstallments, createPayment } = useViewModel(cardToken);
 
     useEffect(() => {
         getInstallments();
     }, [])
+
+    
+    useEffect(() => {
+        if(responseMessage !== ''){
+            ToastAndroid.show(responseMessage, ToastAndroid.LONG);
+        }
+    }, [responseMessage])
 
     return (
         <SafeAreaView style={styles.container}>
@@ -116,9 +125,17 @@ export const ClientPaymentInstallmentsScreen = ({ navigation, route }: Props) =>
             <View style={styles.footer}>
                 <RoundedButtonComponent 
                     text='CONTINUAR CON EL PAGO' 
-                    onPress={() => {}}
-                    style={styles.button}
+                    onPress={() => createPayment()}
                 />
+                {
+                    loading &&
+
+                    <ActivityIndicator
+                        style={styles.loading}
+                        size="large"
+                        color={globalColors.buttons}
+                    />
+                }
                 <View style={styles.securityContainer}>
                     <View style={styles.lockIcon} />
                     <Text style={styles.securityText}>
@@ -419,5 +436,12 @@ const styles = StyleSheet.create({
         color: '#7f8c8d',
         fontWeight: '400',
         letterSpacing: 0.3,
+    },
+    loading: {
+        position: 'absolute',
+        bottom: 0,
+        top: 0,
+        right: 0,
+        left: 0,
     },
 })
