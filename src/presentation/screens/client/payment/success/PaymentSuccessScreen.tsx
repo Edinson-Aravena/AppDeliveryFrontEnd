@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
     View,
     Text,
@@ -13,6 +13,7 @@ import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator
 import { RoundedButtonComponent } from '../../../../components';
 import { globalColors } from '../../../../theme/GlobalTheme';
 import { useNavigation } from '@react-navigation/native';
+import { ShoppingBagContext } from '../../../../context/ShoppingBagContext';
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientPaymentSuccessScreen'> { };
 
@@ -20,6 +21,12 @@ const { width, height } = Dimensions.get('window');
 
 export const ClientPaymentSuccessScreen = ({ navigation }: Props) => {
     const navigationHook = useNavigation();
+    const { clearShoppingBag } = useContext(ShoppingBagContext);
+
+    // Limpiar el carrito cuando se monta la pantalla de éxito (medida de seguridad)
+    useEffect(() => {
+        clearShoppingBag();
+    }, [clearShoppingBag]);
 
     const handleContinueShopping = () => {
         // Navegar de vuelta a la lista de categorías
@@ -53,44 +60,6 @@ export const ClientPaymentSuccessScreen = ({ navigation }: Props) => {
                         Tu pago ha sido procesado exitosamente. Recibirás una confirmación por correo electrónico.
                     </Text>
 
-                    {/* Información adicional */}
-                    <View style={styles.infoCard}>
-                        <View style={styles.infoItem}>
-                            <View style={styles.infoIcon}>
-                                <Text style={styles.infoIconText}>📧</Text>
-                            </View>
-                            <View style={styles.infoContent}>
-                                <Text style={styles.infoTitle}>Confirmación por email</Text>
-                                <Text style={styles.infoDescription}>
-                                    Te hemos enviado todos los detalles de tu compra
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.infoItem}>
-                            <View style={styles.infoIcon}>
-                                <Text style={styles.infoIconText}>🚚</Text>
-                            </View>
-                            <View style={styles.infoContent}>
-                                <Text style={styles.infoTitle}>Tiempo de entrega</Text>
-                                <Text style={styles.infoDescription}>
-                                    Tu pedido será entregado en 30-45 minutos
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={styles.infoItem}>
-                            <View style={styles.infoIcon}>
-                                <Text style={styles.infoIconText}>📱</Text>
-                            </View>
-                            <View style={styles.infoContent}>
-                                <Text style={styles.infoTitle}>Seguimiento en tiempo real</Text>
-                                <Text style={styles.infoDescription}>
-                                    Podrás seguir el estado de tu pedido en la app
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
 
                     {/* Botones de acción */}
                     <View style={styles.buttonContainer}>

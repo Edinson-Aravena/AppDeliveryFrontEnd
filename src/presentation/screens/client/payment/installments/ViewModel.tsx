@@ -17,7 +17,7 @@ const ClientPaymentInstallmentsViewModel = (cardToken: ResponseMercadoPagoCardTo
     const [value, setValue] = useState(null);
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState<DropDownProps[]>([]);
-    const {total, shoppingBag} = useContext(ShoppingBagContext);
+    const {total, shoppingBag, clearShoppingBag} = useContext(ShoppingBagContext);
     const {user} = useContext(UserContext);
     const [installments, setInstallments] = useState<PayerCost[]>([])
     const [installmentData, setInstallmentData] = useState<ResponseMercadoPagoInstallments>();
@@ -56,6 +56,11 @@ const ClientPaymentInstallmentsViewModel = (cardToken: ResponseMercadoPagoCardTo
         const result = await CreatePaymentTokenMercadoPagoUseCase(data);
         setLoading(false)
         setResponseMessage(result.message)
+        
+        // Si el pago fue exitoso, limpiar el carrito de compras
+        if (result.success) {
+            await clearShoppingBag();
+        }
         
         // Navegar a la pantalla de éxito independientemente del resultado del pago
         navigation.navigate('ClientPaymentSuccessScreen' as never);

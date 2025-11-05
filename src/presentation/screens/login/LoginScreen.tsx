@@ -22,9 +22,24 @@ export const LoginScreen = ({navigation, route}:Props) => {
     
     useEffect(() => {
         if(user?.id != null && user?.id != undefined && user?.id != "") {   
-            if(user.roles?.length! >1){
+            if(user.roles?.length! > 1){
+                // Si tiene más de un rol, mostrar pantalla de selección
                 navigation.replace('RolesScreen')
-            }else{
+            } else if(user.roles?.length === 1){
+                // Si tiene solo un rol, navegar directamente según el rol
+                const rolName = user.roles[0].name?.trim().toUpperCase();
+                if(rolName === "RESTAURANTE"){
+                    navigation.replace('RestaurantBottomTabsnavigator')
+                } else if(rolName === "CLIENTE"){
+                    navigation.replace('ClientBottomTabsnavigator')
+                } else if(rolName === "REPARTIDOR"){
+                    navigation.replace('DeliveryBottomTabsnavigator')
+                } else {
+                    // Por defecto, si el rol no coincide, ir a cliente
+                    navigation.replace('ClientBottomTabsnavigator')
+                }
+            } else {
+                // Si no tiene roles, ir a cliente por defecto
                 navigation.replace('ClientBottomTabsnavigator')
             }
         }

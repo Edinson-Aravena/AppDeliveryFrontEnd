@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useContext } from 'react'
 import { View, useWindowDimensions, Text, Platform, StatusBar,  FlatList } from 'react-native'
 import useViewModel from './ViewModel'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { globalColors } from '../../../../theme/GlobalTheme';
 import { OrdenListItem } from './Item';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ClientOrderStackParamList } from '../../../../navigator/ClientOrderStackNavigator';
+import { useCallback } from 'react';
+import { OrderContext } from '../../../../context/OrderContext';
+import { UserContext } from '../../../../context/UserContext';
 
 interface Props {
     status: string;
@@ -18,16 +21,21 @@ const OrderListView = ({ status }: Props) => {
 
     const navigation = useNavigation<StackNavigationProp<ClientOrderStackParamList, 'ClientOrderListScreen'>>();
 
-    useEffect(() => {
-        getOrders(user?.id!, status);
-    }, [user]);
+    // Recargar pedidos cuando la pantalla recibe el foco
+    useFocusEffect(
+        useCallback(() => {
+            if (user?.id) {
+                getOrders(user.id, status);
+            }
+        }, [user?.id, status, getOrders])
+    );
 
     return (
         <View>
             <FlatList
                 data={
                     status === 'PAGADO' 
-                    ? ordersDispatched 
+                    ? ordersPayed 
                     : status === 'DESPACHADO' 
                     ? ordersDispatched 
                     : status === 'EN CAMINO' 
@@ -61,6 +69,8 @@ const renderScene = ({ route }: any) => {
 
 export const ClientOrderListScreen = () => {
     const layout = useWindowDimensions();
+    const { getOrdersByClientAndStatus } = useContext(OrderContext);
+    const { user } = useContext(UserContext);
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
@@ -69,6 +79,19 @@ export const ClientOrderListScreen = () => {
         { key: 'third', title: 'EN CAMINO' },
         { key: 'fourth', title: 'ENTREGADO' },
     ]);
+
+    // Recargar todos los pedidos cuando la pantalla recibe el foco
+    useFocusEffect(
+        useCallback(() => {
+            if (user?.id) {
+                // Recargar todos los estados de pedidos
+                getOrdersByClientAndStatus(user.id, 'PAGADO');
+                getOrdersByClientAndStatus(user.id, 'DESPACHADO');
+                getOrdersByClientAndStatus(user.id, 'EN CAMINO');
+                getOrdersByClientAndStatus(user.id, 'ENTREGADO');
+            }
+        }, [user?.id, getOrdersByClientAndStatus])
+    );
 
     return (
         <View style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0, flex: 1 }}>

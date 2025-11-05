@@ -9,6 +9,7 @@ export interface ShoppingBagContextProps {
     getShoppingBag(): Promise<void>,
     saveItem(product: Product): Promise<void>,
     deleteItem(product: Product): Promise<void>,
+    clearShoppingBag(): Promise<void>,
     total: number;
     getTotal(): Promise<void>,
 }
@@ -79,6 +80,13 @@ export const ShoppingBagProvider = ({ children }: any) => {
 
     }
 
+    const clearShoppingBag = async (): Promise<void> => {
+        const emptyBag: Product[] = [];
+        await SaveShoppingBagUseCase(emptyBag);
+        setShoppingBag(emptyBag);
+        setTotal(0);
+    }
+
     return (
         <ShoppingBagContext.Provider value={{
             shoppingBag,
@@ -86,7 +94,8 @@ export const ShoppingBagProvider = ({ children }: any) => {
             getTotal,
             getShoppingBag,
             saveItem,
-            deleteItem
+            deleteItem,
+            clearShoppingBag
         }}
         >
             {children}

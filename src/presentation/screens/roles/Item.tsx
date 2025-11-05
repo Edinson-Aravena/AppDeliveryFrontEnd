@@ -17,11 +17,12 @@ export const RolesItem = ({ height, rol, width, navigation }: Props) => {
         <TouchableOpacity
             style={{ ...styles.container, height: height, width: width - 100 }}
             onPress={() => {
-                if (rol.name == "RESTAURANTE") {
+                const rolName = rol.name?.trim().toUpperCase();
+                if (rolName === "RESTAURANTE") {
                     navigation.replace('RestaurantBottomTabsnavigator')
-                } else if (rol.name == "CLIENTE") {
+                } else if (rolName === "CLIENTE") {
                     navigation.replace('ClientBottomTabsnavigator')
-                } else if (rol.name == "REPARTIDOR") {
+                } else if (rolName === "REPARTIDOR") {
                     navigation.replace('DeliveryBottomTabsnavigator')
                 }
             }}

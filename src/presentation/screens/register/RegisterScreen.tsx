@@ -19,7 +19,7 @@ export const RegisterScreen = ({ navigation, route }: Props) => {
 
     useEffect(() => {
         if (user?.id != null && user?.id != undefined) {
-            navigation.replace('ClientBottomTabsnavigator')
+            navigation.replace('LoginScreen')
         }
     }, [user])
 
