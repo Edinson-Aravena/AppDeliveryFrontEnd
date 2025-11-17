@@ -17,11 +17,16 @@ export const RegisterScreen = ({ navigation, route }: Props) => {
 
     const [modalVisible, setModalVisible] = useState(false);
 
-    useEffect(() => {
-        if (user?.id != null && user?.id != undefined) {
-            navigation.replace('LoginScreen')
+    // Función para manejar el registro
+    const handleRegister = async () => {
+        const response = await register();
+        if (response && response.success) {
+            // Redirigir al login después del registro exitoso
+            setTimeout(() => {
+                navigation.navigate('LoginScreen');
+            }, 1500); // Esperar 1.5 segundos para que el usuario vea el mensaje
         }
-    }, [user])
+    }
 
     return (
         <ImageBackground
@@ -46,8 +51,8 @@ export const RegisterScreen = ({ navigation, route }: Props) => {
 
                 </TouchableOpacity>
                 <TitleComponent
-                    text="Selecciona una imagen "
-                    size={30}
+                    text="Selecciona una imagen (opcional)"
+                    size={25}
                     style={{ color: "white", fontWeight: "bold", marginTop: 10 }}
                 />
             </View>
@@ -119,9 +124,7 @@ export const RegisterScreen = ({ navigation, route }: Props) => {
                     />
 
                     <View style={{ marginTop: 10 }}>
-                        <RoundedButtonComponent text='REGISTRARSE' onPress={() => {
-                            register()
-                        }} />
+                        <RoundedButtonComponent text='REGISTRARSE' onPress={handleRegister} />
                     </View>
 
                     <View style={styles.formRegister}>

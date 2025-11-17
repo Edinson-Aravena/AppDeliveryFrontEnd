@@ -7,11 +7,13 @@ import { ToastAndroid } from 'react-native'
 import { RoundedButtonComponent } from '../../../../components'
 import { StackScreenProps } from '@react-navigation/stack';
 import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator';
+import { ProfileStackParamList } from '../../../../navigator/ProfileStackNavigator';
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientAddressListScreen'>{}
+interface ProfileProps extends StackScreenProps<ProfileStackParamList, 'ProfileAddressListScreen'>{}
 
 
-export const ClientAddressListScreen = ({navigation, route}:Props) => {
+export const ClientAddressListScreen = ({navigation, route}: Props | ProfileProps) => {
 
     const {address, checked, responseMessage, getAddress, changeRadioValue, createOrder } = useViewModel()
 
@@ -21,6 +23,9 @@ export const ClientAddressListScreen = ({navigation, route}:Props) => {
         }
     }, [responseMessage])
 
+    // Determinar si viene del flujo de compra o del perfil
+    const isFromCheckout = route.name === 'ClientAddressListScreen';
+
     return (
         <View style={{flex: 1, zIndex: 1, marginTop: "25%"}}>
             <FlatList
@@ -29,10 +34,11 @@ export const ClientAddressListScreen = ({navigation, route}:Props) => {
                 renderItem={({item}) => <AddressListItem address={item} checked={checked} changeRadioValue={changeRadioValue}/>}
             />
 
-            <View style={{ width: '100%', paddingHorizontal: 20, paddingVertical:20 }}>
-                {/* <RoundedButtonComponent onPress={() => createOrder() } text='Continuar' /> */}
-                <RoundedButtonComponent onPress={() => navigation.navigate('ClientPaymentFormScreen') } text='Continuar' />
-            </View>
+            {isFromCheckout && (
+                <View style={{ width: '100%', paddingHorizontal: 20, paddingVertical:20 }}>
+                    <RoundedButtonComponent onPress={() => navigation.navigate('ClientPaymentMethodSelectScreen' as any) } text='Continuar' />
+                </View>
+            )}
         </View>
     )
 }

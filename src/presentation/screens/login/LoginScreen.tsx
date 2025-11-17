@@ -57,7 +57,7 @@ export const LoginScreen = ({navigation, route}:Props) => {
                     source={require('../../assets/logo.png')}
                 />
                 <TitleComponent
-                    text="Rapidos Y Sabrosos"
+                    text="Las Araucarias"
                     size={30}
                     style={{ color: "white", fontWeight: "bold", marginTop: 10 }}
                 />

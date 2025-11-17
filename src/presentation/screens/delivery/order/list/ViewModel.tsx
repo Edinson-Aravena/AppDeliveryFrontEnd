@@ -13,7 +13,7 @@ const DeliveryOrderListViewModel = () => {
     const getOrders = async (idDelivery: string, status: string) => {
         const result = await getOrdersByDeliveryAndStatus(idDelivery, status);
         //setOrders(result);
-        console.log('Ordenes obtenidas:', JSON.stringify(result, null, 2));
+        console.log('Ordenes del repartidor obtenidas:', JSON.stringify(result, null, 2));
     }
 
     return {

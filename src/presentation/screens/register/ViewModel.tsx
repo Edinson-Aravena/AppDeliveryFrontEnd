@@ -68,17 +68,22 @@ export const RegisterViewModel = () => {
     const register = async () => {
         if (isValidForm()) {
             setLoading(true)
-            const response = await (RegisterWithImageAuthUseCase(values, file!));
+            // Si no hay imagen, usar RegisterAuthUseCase, si hay imagen usar RegisterWithImageAuthUseCase
+            const response = file 
+                ? await RegisterWithImageAuthUseCase(values, file)
+                : await RegisterAuthUseCase(values);
+            
             console.log("RESULT: " + JSON.stringify(response))
             setLoading(false)
             if(response.success){
-                await SaveUserUseCase(response.data)
-                getUserSession()
+                // No guardar usuario automáticamente, solo mostrar mensaje de éxito
+                ToastAndroid.show('¡Registro exitoso! Ahora puedes iniciar sesión', ToastAndroid.LONG);
+                return response; // Retornar response para que el componente maneje la navegación
             }else{
                 setErrorMessage(response.message);
             }
         }
-
+        return null;
     }
  
     const isValidForm = (): boolean => {
@@ -95,7 +100,7 @@ export const RegisterViewModel = () => {
             return false;
         }
         if (values.phone == '') {
-            setErrorMessage('Ingresa tu telefóno')
+            setErrorMessage('Ingresa tu teléfono')
             return false;
         }
         if (values.password == '') {
@@ -110,10 +115,7 @@ export const RegisterViewModel = () => {
             setErrorMessage('Las contraseña no coinciden')
             return false;
         }
-        if (values.image === '') {
-            setErrorMessage('Selecciona una imágen')
-            return false;
-        }
+        // La imagen ya NO es obligatoria
         return true;
     }
     return {

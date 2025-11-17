@@ -4,11 +4,13 @@ import MapView, { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps'
 import useViewModel from './ViewModel'
 import { RoundedButtonComponent } from '../../../../components'
 import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator'
+import { ProfileStackParamList } from '../../../../navigator/ProfileStackNavigator'
 import { StackScreenProps } from '@react-navigation/stack'
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientAddressMapScreen'> { }
+interface ProfileProps extends StackScreenProps<ProfileStackParamList, 'ProfileAddressMapScreen'> { }
 
-export const ClientAddressMapScreen = ({navigation, route}:Props) => {
+export const ClientAddressMapScreen = ({navigation, route}: Props | ProfileProps) => {
 
     const { messagePermissions, position, mapRef, name, latitude, longitude, onRegionChangeComplete } = useViewModel();
 
@@ -17,6 +19,8 @@ export const ClientAddressMapScreen = ({navigation, route}:Props) => {
             ToastAndroid.show(messagePermissions, ToastAndroid.LONG);
         }
     }, [messagePermissions])
+
+    const isFromProfile = route.name === 'ProfileAddressMapScreen';
 
     return (
         <View style={styles.container}>
@@ -38,8 +42,9 @@ export const ClientAddressMapScreen = ({navigation, route}:Props) => {
 
             <View style={styles.buttonRefPoint}>
                 <RoundedButtonComponent text={'SELECCIONA TU UBICACIÓN'} onPress={() => {
+                    const targetScreen = isFromProfile ? 'ProfileAddressCreateScreen' : 'ClientAddressCreateScreen';
                     navigation.navigate({
-                        name: 'ClientAddressCreateScreen',
+                        name: targetScreen as any,
                         merge: true,
                         params: {
                             refPoint: name,

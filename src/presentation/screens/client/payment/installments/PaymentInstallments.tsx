@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { 
     View, 
     Text, 
@@ -7,23 +7,33 @@ import {
     ScrollView, 
     SafeAreaView,
     Dimensions, 
-    ToastAndroid
+    ToastAndroid,
+    TouchableOpacity
 } from 'react-native'
 import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator'
+import { ProfileStackParamList } from '../../../../navigator/ProfileStackNavigator'
 import { Dropdown } from 'react-native-element-dropdown'
 import useViewModel from './ViewModel'
+import PaymentMethodCreateViewModel from '../../../profile/payment/create/ViewModel'
 import { RoundedButtonComponent } from '../../../../components'
 import { globalColors } from '../../../../theme/GlobalTheme'
 import { ActivityIndicator } from 'react-native-paper'
+import { IconComponent } from '../../../../components'
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientPaymentInstallmentsScreen'> { };
+interface ProfileProps extends StackScreenProps<ProfileStackParamList, 'ProfilePaymentInstallmentsScreen'> { };
 
 const { width } = Dimensions.get('window');
 
-export const ClientPaymentInstallmentsScreen = ({ navigation, route }: Props) => {
+export const ClientPaymentInstallmentsScreen = ({ navigation, route }: Props | ProfileProps) => {
 
     const { cardToken } = route.params;
+    const fromProfile = (route.params as any)?.fromProfile || false;
+    const fromSavedCard = (route.params as any)?.fromSavedCard || false;
     const { open, value, items, responseMessage, loading, setValue, getInstallments, createPayment } = useViewModel(cardToken);
+    const { loading: savingCard, responseMessage: saveMessage, savePaymentMethod } = PaymentMethodCreateViewModel(cardToken);
+    const [isSaving, setIsSaving] = useState(false);
+    const [saveCard, setSaveCard] = useState(false);
 
     useEffect(() => {
         getInstallments();
@@ -35,6 +45,34 @@ export const ClientPaymentInstallmentsScreen = ({ navigation, route }: Props) =>
             ToastAndroid.show(responseMessage, ToastAndroid.LONG);
         }
     }, [responseMessage])
+
+    useEffect(() => {
+        if(saveMessage !== ''){
+            ToastAndroid.show(saveMessage, ToastAndroid.LONG);
+            if(saveMessage.includes('correctamente')) {
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'ProfilePaymentMethodListScreen' as any }],
+                });
+            }
+        }
+    }, [saveMessage])
+
+    const handlePress = async () => {
+        if (fromProfile) {
+            setIsSaving(true);
+            await savePaymentMethod();
+            setIsSaving(false);
+        } else {
+            // Guardar tarjeta si el usuario lo seleccionó y no viene de una tarjeta guardada
+            if (saveCard && !fromSavedCard) {
+                setIsSaving(true);
+                await savePaymentMethod();
+                setIsSaving(false);
+            }
+            createPayment();
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -123,12 +161,26 @@ export const ClientPaymentInstallmentsScreen = ({ navigation, route }: Props) =>
             </ScrollView>
 
             <View style={styles.footer}>
+                {!fromProfile && !fromSavedCard && (
+                    <TouchableOpacity 
+                        style={styles.saveCardOption}
+                        onPress={() => setSaveCard(!saveCard)}
+                        activeOpacity={0.7}
+                    >
+                        <View style={[styles.checkbox, saveCard && styles.checkboxChecked]}>
+                            {saveCard && (
+                                <IconComponent icon="checkmark" size={16} color="#fff" />
+                            )}
+                        </View>
+                        <Text style={styles.saveCardText}>Guardar esta tarjeta para futuras compras</Text>
+                    </TouchableOpacity>
+                )}
                 <RoundedButtonComponent 
-                    text='CONTINUAR CON EL PAGO' 
-                    onPress={() => createPayment()}
+                    text={fromProfile ? 'GUARDAR TARJETA' : 'CONTINUAR CON EL PAGO'} 
+                    onPress={handlePress}
                 />
                 {
-                    loading &&
+                    (loading || isSaving) &&
 
                     <ActivityIndicator
                         style={styles.loading}
@@ -414,6 +466,31 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.05,
         shadowRadius: 4,
         elevation: 3,
+    },
+    saveCardOption: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16,
+        paddingVertical: 12,
+    },
+    checkbox: {
+        width: 24,
+        height: 24,
+        borderRadius: 6,
+        borderWidth: 2,
+        borderColor: '#ddd',
+        marginRight: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    checkboxChecked: {
+        backgroundColor: globalColors.primary,
+        borderColor: globalColors.primary,
+    },
+    saveCardText: {
+        flex: 1,
+        fontSize: 14,
+        color: '#495057',
     },
     button: {
         marginBottom: 16,

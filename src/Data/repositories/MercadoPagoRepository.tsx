@@ -18,7 +18,7 @@ export class MercadoPagoRepositoryImpl implements MercadoPagoRepository {
     }
 
     async createCardToken(cardTokenParams: CardTokenParams): Promise<ResponseMercadoPagoCardToken> {
-        const response = await ApiMercadoPago.post<ResponseMercadoPagoCardToken>('/card_tokens?public_key=TEST-ae73b638-4120-491d-bfe1-967257605c00', cardTokenParams);
+        const response = await ApiMercadoPago.post<ResponseMercadoPagoCardToken>('/card_tokens?public_key=TEST-63ccd413-1304-4dd5-a32a-154eb17ef85f', cardTokenParams);
         return response.data;
     }
 

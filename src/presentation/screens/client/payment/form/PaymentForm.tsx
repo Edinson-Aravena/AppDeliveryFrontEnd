@@ -15,12 +15,16 @@ import React, { useEffect } from 'react'
 import { InputComponent } from "../../../../components";
 import { Dropdown } from "react-native-element-dropdown";
 import { ClientStackParamList } from "../../../../navigator/ClientStackNavigator";
+import { ProfileStackParamList } from "../../../../navigator/ProfileStackNavigator";
 import { StackScreenProps } from "@react-navigation/stack";
 import { globalColors } from "../../../../theme/GlobalTheme";
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientPaymentFormScreen'> { };
+interface ProfileProps extends StackScreenProps<ProfileStackParamList, 'ProfilePaymentFormScreen'> { };
 
-const ClientPaymentFormScreen = ({ navigation, route }: Props) => {
+const ClientPaymentFormScreen = ({ navigation, route }: Props | ProfileProps) => {
+    const savedCardData = (route.params as any)?.savedCardData;
+    
     const {
         creditCardRef,
         value,
@@ -34,16 +38,22 @@ const ClientPaymentFormScreen = ({ navigation, route }: Props) => {
         getIdentificationTypes,
         onChange,
         clearError
-    } = useViewModel();
+    } = useViewModel(savedCardData);
 
     useEffect(() => {
         getIdentificationTypes();
     }, [])
 
+    const isFromProfile = route.name === 'ProfilePaymentFormScreen';
+
     useEffect(() => {
         console.log('Card Token: ', JSON.stringify(cardToken, null, 3));
         if (cardToken !== undefined && cardToken !== null) {
-            navigation.navigate('ClientPaymentInstallmentsScreen', { cardToken: cardToken});
+            if (isFromProfile) {
+                navigation.navigate('ProfilePaymentInstallmentsScreen' as any, { cardToken: cardToken, fromProfile: true });
+            } else {
+                navigation.navigate('ClientPaymentInstallmentsScreen' as any, { cardToken: cardToken });
+            }
         }
     }, [cardToken])
 
@@ -95,6 +105,13 @@ const ClientPaymentFormScreen = ({ navigation, route }: Props) => {
                                         number: '1234 5678 9012 3456',
                                         expiration: 'MM/AA',
                                         holder: 'NOMBRE COMPLETO'
+                                    }}
+                                    initialValues={{
+                                        holder: savedCardData?.cardHolderName || '',
+                                        number: savedCardData?.cardNumber || '',
+                                        expiration: savedCardData?.expirationMonth && savedCardData?.expirationYear
+                                            ? `${String(savedCardData.expirationMonth).padStart(2, '0')}/${String(savedCardData.expirationYear).slice(-2)}`
+                                            : ''
                                     }}
                                     background={'#009929'}
                                     textColor={'white'}

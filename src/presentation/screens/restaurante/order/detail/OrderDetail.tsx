@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, FlatList, ToastAndroid } from 'react-native'
+import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { RestaurantOrderStackParamList } from '../../../../navigator/RestaurantOrderStackNavigator'
 import { StackScreenProps } from '@react-navigation/stack'
 import { OrderDetailItem } from './Item'
@@ -7,27 +7,18 @@ import { DateFormatter } from '../../../../utils/DateFormatter';
 import { IconComponent } from '../../../../components'
 import { globalColors } from '../../../../theme/GlobalTheme'
 import useViewModel from './ViewModel'
-import { RoundedButtonComponent } from '../../../../components/RoundedButtonComponent'
-import { Dropdown } from 'react-native-element-dropdown';
 
 interface Props extends StackScreenProps<RestaurantOrderStackParamList, 'RestauranteOrderDetailScreen'> { };
 
 export const RestauranteOrderDetailScreen = ({ navigation, route }: Props) => {
 
     const { order } = route.params;
-    const { total, getTotal, deliveryMen, responseMessage, setResponseMessage, getDeliveryMen, items, open, value, setItems, setOpen, setValue, distpatchOrder } = useViewModel(order);
-
-    useEffect(() => {
-        if (responseMessage !== '') {
-            ToastAndroid.show(responseMessage, ToastAndroid.LONG);
-        }
-    }, [responseMessage])
+    const { total, getTotal } = useViewModel(order);
 
     useEffect(() => {
         if (total === 0) {
             getTotal();
         }
-        getDeliveryMen();
     }, []);
 
 
@@ -73,44 +64,45 @@ export const RestauranteOrderDetailScreen = ({ navigation, route }: Props) => {
                         <Text style={styles.value}>{order.address?.address}, {order.address?.neighborhood}</Text>
                     </View>
                 </View>
-                {
-                    order.status === 'PAGADO'
-                        ? <View>
-                            <Text style={styles.deliveries}>REPARTIDORES DISPONIBLES</Text>
 
-                            <View style={styles.dropDown}>
-                                <Dropdown
-                                    style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, marginTop: 5 }}
-                                    data={items}
-                                    labelField="label"
-                                    valueField="value"
-                                    placeholder="Selecciona un repartidor"
-                                    value={value}
-                                    onChange={item => {
-                                        setValue(item.value);
-                                    }}
-                                />
-                            </View>
-                        </View>
-                        : (
-                            <View style={{ marginTop: 10 }}>
-                                <Text style={styles.deliveries}>REPARTIDOR ASIGNADO</Text>
-                                <Text style={styles.deliveryName}>{order.delivery?.name} {order.delivery?.lastname}</Text>
-                            </View>
-                        )
-                }
+                {/* Información del repartidor si está asignado */}
+                {order.delivery && (
+                    <View style={styles.deliveryInfo}>
+                        <Text style={styles.deliveries}>🛵 REPARTIDOR ASIGNADO</Text>
+                        <Text style={styles.deliveryName}>{order.delivery?.name} {order.delivery?.lastname}</Text>
+                        {order.delivery?.phone && (
+                            <Text style={styles.deliveryPhone}>📞 {order.delivery?.phone}</Text>
+                        )}
+                    </View>
+                )}
+
+                {/* Estado de la orden */}
+                <View style={styles.statusInfo}>
+                    <Text style={styles.statusLabel}>Estado del pedido:</Text>
+                    <View style={[
+                        styles.statusBadge,
+                        order.status === 'PAGADO' && styles.statusPending,
+                        order.status === 'DESPACHADO' && styles.statusDispatched,
+                        order.status === 'ENTREGADO' && styles.statusDelivered
+                    ]}>
+                        <Text style={styles.statusText}>
+                            {order.status === 'PAGADO' && '⏳ Pendiente de Asignación'}
+                            {order.status === 'DESPACHADO' && '🛵 En Camino'}
+                            {order.status === 'ENTREGADO' && '✅ Entregado'}
+                        </Text>
+                    </View>
+                </View>
 
                 <View style={styles.totalInfo}>
                     <Text style={styles.total}>Total: ${total}</Text>
-                    <View style={styles.button}>
-                        {
-                            order.status === 'PAGADO' &&
-                            <RoundedButtonComponent
-                                text="DESPACHAR PEDIDO"
-                                onPress={() => distpatchOrder()}
-                            />
-                        }
-                    </View>
+                </View>
+
+                {/* Nota informativa */}
+                <View style={styles.infoNote}>
+                    <IconComponent icon="information-circle-outline" size={20} color={globalColors.buttons} />
+                    <Text style={styles.infoNoteText}>
+                        La asignación de repartidores se realiza desde la página web
+                    </Text>
                 </View>
             </View>
         </View>
@@ -152,34 +144,84 @@ const styles = StyleSheet.create({
         marginTop: 2,
     },
     deliveries: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold',
-        marginTop: 20,
-        marginBottom: 10,
-        
+        marginTop: 10,
+        color: '#666',
+        textTransform: 'uppercase',
     },
     deliveryName: {
-        fontSize: 20,
+        fontSize: 18,
         color: globalColors.buttons,
         fontWeight: 'bold',
         marginTop: 5
     },
-
-    totalInfo: {
+    deliveryPhone: {
+        fontSize: 14,
+        color: '#666',
+        marginTop: 3
+    },
+    deliveryInfo: {
+        backgroundColor: '#f0f9ff',
+        padding: 15,
+        borderRadius: 10,
+        marginTop: 15,
+        borderLeftWidth: 4,
+        borderLeftColor: globalColors.buttons,
+    },
+    statusInfo: {
         marginTop: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+    },
+    statusLabel: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#666',
+        marginBottom: 8,
+    },
+    statusBadge: {
+        padding: 12,
+        borderRadius: 8,
         alignItems: 'center',
     },
+    statusPending: {
+        backgroundColor: '#fef3c7',
+        borderWidth: 1,
+        borderColor: '#fcd34d',
+    },
+    statusDispatched: {
+        backgroundColor: '#dbeafe',
+        borderWidth: 1,
+        borderColor: '#60a5fa',
+    },
+    statusDelivered: {
+        backgroundColor: '#d1fae5',
+        borderWidth: 1,
+        borderColor: '#34d399',
+    },
+    statusText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#1f2937',
+    },
+    totalInfo: {
+        marginTop: 20,
+        paddingTop: 15,
+        borderTopWidth: 2,
+        borderTopColor: '#e5e7eb',
+    },
     total: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
         color: 'black',
+        textAlign: 'center',
     },
-    button: {
-        width: '50%',
+    infoNote: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#eff6ff',
+        padding: 12,
+        borderRadius: 8,
+        marginTop: 15,
+        gap: 8,
     },
-    dropDown: {
-        marginTop: 10,
-    }
 })

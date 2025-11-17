@@ -11,23 +11,34 @@ interface DropDownProps {
     value: string;
 }
 
-const ClientPaymentFormViewModel = () => {
+interface SavedCardData {
+    cardHolderName?: string;
+    cardNumber?: string;
+    expirationMonth?: number;
+    expirationYear?: number;
+    identificationType?: string;
+    identificationNumber?: string;
+}
+
+const ClientPaymentFormViewModel = (savedCardData?: SavedCardData) => {
 
     const creditCardRef = useRef() as any;
     const [values, setValues] = useState({
         brand: '',
         cvv: '',
-        expiration: '',
-        holder: '',
-        number: '',
+        expiration: savedCardData?.expirationMonth && savedCardData?.expirationYear 
+            ? `${String(savedCardData.expirationMonth).padStart(2, '0')}/${String(savedCardData.expirationYear).slice(-2)}`
+            : '',
+        holder: savedCardData?.cardHolderName || '',
+        number: savedCardData?.cardNumber || '',
     })
 
     const [identificationValues, setIdentificationValues] = useState({
-        identificationType: '',
-        identificationNumber: '',
+        identificationType: savedCardData?.identificationType || '',
+        identificationNumber: savedCardData?.identificationNumber || '',
     })
 
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState(savedCardData?.identificationType || null);
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState<DropDownProps[]>([]);
     const [cardToken, setCardToken] = useState<ResponseMercadoPagoCardToken>()

@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/OrderList';
+import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/orderList';
 import { ProfileInfoScreen } from '../screens/profile/info/ProfileInfo';
 import { IconComponent } from '../components';
 import { RestaurantCategoryNavigator } from './RestaurantCategoryNavigator';
@@ -13,48 +13,56 @@ const Tab = createBottomTabNavigator();
 export const RestaurantBottomTabsnavigator = () => {
     return (
         <Tab.Navigator
-            screenOptions={{
+            initialRouteName="RestaurantOrderStackNavigator"
+            screenOptions={({ route }) => ({
                 headerShown: false,
+                tabBarActiveTintColor: globalColors.buttons,
+                tabBarInactiveTintColor: '#95a5a6',
+                tabBarLabelStyle: {
+                    fontSize: 12,
+                    fontWeight: '600',
+                    marginBottom: 5,
+                },
                 tabBarStyle: {
-                    paddingBottom: 10,
-                    paddingTop: 5,
-                    height: 60,
-                }
-            }}
+                    height: 65,
+                    paddingTop: 8,
+                    paddingBottom: 8,
+                    backgroundColor: '#ffffff',
+                    borderTopWidth: 1,
+                    borderTopColor: '#e0e0e0',
+                    elevation: 10,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: -2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 3,
+                    justifyContent: 'center',
+                },
+                tabBarIconStyle: {
+                    marginTop: 5,
+                },
+            })}
         >
             <Tab.Screen
-                name="RestaurantCategoryNavigator"
-                component={RestaurantCategoryNavigator}
-                options={({ route, navigation }) => (
-                    {
-                        title: 'Categorias',
-                        tabBarLabel: 'Categorias',
-                        tabBarIcon: () => (
-                            <IconComponent icon="reorder-four-outline" color={globalColors.buttons} size={26} />
-                        ),
-                        
-                    }
-                )}
+                name="RestaurantOrderStackNavigator"
+                component={RestaurantOrderStackNavigator}
+                options={{
+                    tabBarLabel: 'Pedidos',
+                    tabBarIcon: ({ color, focused }) => (
+                        <IconComponent icon="clipboard-outline" color={color} size={focused ? 30 : 28} />
+                    )
+                }}
             />
 
             <Tab.Screen
+                name="ProfileInfoScreen"
+                component={ProfileInfoScreen}
                 options={{
-                    headerShown: false,
-                    tabBarLabel: 'Pedidos',
-                    tabBarIcon: ({ color }) => (
-                        <IconComponent icon="clipboard-outline" color={color} size={26} />
-                    )
-                }}
-                name="RestaurantOrderStackNavigator" component={RestaurantOrderStackNavigator} />
-            <Tab.Screen
-                options={{
-                    headerShown: false,
                     tabBarLabel: 'Perfil',
-                    tabBarIcon: ({ color }) => (
-                        <IconComponent icon="id-card-outline" color={color} size={26} />
+                    tabBarIcon: ({ color, focused }) => (
+                        <IconComponent icon="person-outline" color={color} size={focused ? 30 : 28} />
                     )
                 }}
-                name="ProfileInfoScreen" component={ProfileInfoScreen} />
+            />
         </Tab.Navigator>
     );
 }

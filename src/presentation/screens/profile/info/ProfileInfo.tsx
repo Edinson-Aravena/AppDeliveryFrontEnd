@@ -8,12 +8,13 @@ import { IconComponent } from '../../../components';
 import { globalColors } from '../../../theme/GlobalTheme';
 import { useNavigation } from '@react-navigation/native';
 import { BackgroundImage } from 'react-native-elements/dist/config';
+import { ProfileStackParamList } from '../../../navigator/ProfileStackNavigator';
 
 
 export const ProfileInfoScreen = () => {
     const { user, removeUserSession } = useViewModel();
 
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList & ProfileStackParamList>>();
     useEffect(() => {
         if(user.id == ''){
             navigation.replace('LoginScreen');
@@ -55,6 +56,34 @@ export const ProfileInfoScreen = () => {
                         <Text style={styles.cardText}>{user?.phone}</Text>
                     </View>
                 </View>
+            </View>
+
+            <View style={styles.menuContainer}>
+                <TouchableOpacity 
+                    style={styles.menuItem}
+                    onPress={() => navigation.navigate('ProfileAddressListScreen')}
+                >
+                    <View style={styles.menuItemContent}>
+                        <IconComponent icon="location-outline" color={globalColors.buttons} size={26} />
+                        <Text style={styles.menuItemText}>Mis Direcciones</Text>
+                    </View>
+                    <IconComponent icon="chevron-forward-outline" color="#666" size={24} />
+                </TouchableOpacity>
+
+                <View style={styles.menuDivider} />
+
+                <TouchableOpacity 
+                    style={styles.menuItem}
+                    onPress={() => {
+                        navigation.navigate('ProfilePaymentMethodListScreen')
+                    }}
+                >
+                    <View style={styles.menuItemContent}>
+                        <IconComponent icon="card-outline" color={globalColors.buttons} size={26} />
+                        <Text style={styles.menuItemText}>Métodos de Pago</Text>
+                    </View>
+                    <IconComponent icon="chevron-forward-outline" color="#666" size={24} />
+                </TouchableOpacity>
             </View>
 
 
@@ -157,5 +186,39 @@ const styles = StyleSheet.create({
     info: {
         display: 'flex',
         flexDirection: 'row',
-    }
+    },
+    menuContainer: {
+        width: '100%',
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        marginBottom: 20,
+    },
+    menuItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 15,
+        paddingHorizontal: 15,
+    },
+    menuItemContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    menuItemText: {
+        fontSize: 16,
+        color: '#333',
+        marginLeft: 15,
+        fontWeight: '500',
+    },
+    menuDivider: {
+        height: 1,
+        backgroundColor: '#E0E0E0',
+        marginHorizontal: 15,
+    },
 });

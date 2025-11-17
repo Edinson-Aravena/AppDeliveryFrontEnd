@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/OrderList';
+import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/orderList';
 import { ProfileInfoScreen } from '../screens/profile/info/ProfileInfo';
 import { IconComponent } from '../components';
 import { RestaurantCategoryNavigator } from './RestaurantCategoryNavigator';

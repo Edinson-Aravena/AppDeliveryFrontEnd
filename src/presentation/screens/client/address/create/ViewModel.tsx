@@ -12,7 +12,6 @@ const ClientAddressViewModel = () => {
     const [values, setValues] = useState({
         address: '',
         neighborhood: '',
-        refPoint: '',
         lat: 0.0,
         lng: 0.0,
         id_user: user?.id || '',
@@ -23,10 +22,6 @@ const ClientAddressViewModel = () => {
 
     const onChange = (property: string, value: any) => {
         setValues({ ...values, [property]: value })
-    }
-
-    const onChangeRefPoint = (refPoint: string, lat: number, lng: number) => {
-        setValues({ ...values, refPoint: refPoint, lat: lat, lng: lng })
     }
 
 
@@ -60,7 +55,6 @@ const ClientAddressViewModel = () => {
         setValues({
             address: '',
             neighborhood: '',
-            refPoint: '',
             lat: 0.0,
             lng: 0.0,
             id_user: user.id!,
@@ -73,8 +67,7 @@ const ClientAddressViewModel = () => {
         onChange,
         loading,
         responseMessage,
-        createAddress,
-        onChangeRefPoint
+        createAddress
     }
 }
 

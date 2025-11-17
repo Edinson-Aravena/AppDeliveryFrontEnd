@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, ToastAndroid } from 'react-native'
 import useViewModel from './ViewModel'
 import { FlatList } from 'react-native-gesture-handler'
 import { ShoppingBagItem } from './Item'
@@ -15,21 +15,36 @@ export const ClientShoppingBagScreen = ({navigation, route}: Props) => {
 
     const { shoppingBag, total, addItem, deleteItem, subtractItem} = useViewModel();
 
+    const handlePayment = () => {
+        if (!shoppingBag || shoppingBag.length === 0) {
+            ToastAndroid.show('El carrito está vacío. Agrega productos antes de continuar.', ToastAndroid.LONG);
+            return;
+        }
+        navigation.navigate('ClientAddressListScreen');
+    };
+
     return (
         <View style={styles.container}>
-            <View>
-                <FlatList
-                    data={shoppingBag}
-                    keyExtractor={(item) => item.id!}
-                    renderItem={({ item }) =>
-                        <ShoppingBagItem
-                            product={item}
-                            addItem={addItem}
-                            subtractItem={subtractItem}
-                            deleteItem={deleteItem}
-                        />}
-                />
-            </View>
+            {(!shoppingBag || shoppingBag.length === 0) ? (
+                <View style={styles.emptyContainer}>
+                    <Text style={styles.emptyText}>🛒 El carrito está vacío</Text>
+                    <Text style={styles.emptySubtext}>Agrega productos para comenzar</Text>
+                </View>
+            ) : (
+                <View style={styles.listContainer}>
+                    <FlatList
+                        data={shoppingBag}
+                        keyExtractor={(item) => item.id!}
+                        renderItem={({ item }) =>
+                            <ShoppingBagItem
+                                product={item}
+                                addItem={addItem}
+                                subtractItem={subtractItem}
+                                deleteItem={deleteItem}
+                            />}
+                    />
+                </View>
+            )}
 
             <View style={styles.totalToPay}>
                 <View style={styles.totalInfo}>
@@ -38,7 +53,7 @@ export const ClientShoppingBagScreen = ({navigation, route}: Props) => {
                 </View>
 
                 <View style={styles.buttonAdd}>
-                    <RoundedButtonComponent text='Pagar' onPress={() => {navigation.navigate('ClientAddressListScreen'), console.log("ir a addres")}} />
+                    <RoundedButtonComponent text='Pagar' onPress={handlePayment} />
                 </View>
             </View>
         </View>
@@ -49,17 +64,36 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
+    },
+    listContainer: {
+        flex: 1,
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 40,
+    },
+    emptyText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#666',
+        marginBottom: 10,
+    },
+    emptySubtext: {
+        fontSize: 16,
+        color: '#999',
+        textAlign: 'center',
     },
     totalToPay: {
         flexDirection: 'row',
         height: 70,
-        top: -100,
         backgroundColor: '#f2f2f2',
         justifyContent: 'space-around',
         alignItems: 'center',
-        paddingHorizontal: 30
+        paddingHorizontal: 30,
+        borderTopWidth: 1,
+        borderTopColor: '#e0e0e0',
     },
     totalInfo: {
         alignItems: 'center'

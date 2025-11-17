@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react'
-import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/OrderList';
+import { RestaurantOrderListScreen } from '../screens/restaurante/order/list/orderList';
 import { RestauranteOrderDetailScreen } from '../screens/restaurante/order/detail/OrderDetail';
 import { Order } from '../../domain/entities/Order';
 import { OrderProvider } from '../context/OrderContext';

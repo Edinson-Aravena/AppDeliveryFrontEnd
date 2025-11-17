@@ -6,39 +6,33 @@ import { useEffect, useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from "@react-navigation/stack";
 import { ClientStackParamList } from "../../../../navigator/ClientStackNavigator";
+import { ProfileStackParamList } from "../../../../navigator/ProfileStackNavigator";
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientAddressCreateScreen'> { }
+interface ProfileProps extends StackScreenProps<ProfileStackParamList, 'ProfileAddressCreateScreen'> { }
 
-export const ClientAddresstCreateScreen = ({ navigation, route }: Props) => {
+export const ClientAddresstCreateScreen = ({ navigation, route }: Props | ProfileProps) => {
 
 
-    const { address, neighborhood, refPoint, onChange, loading, createAddress, onChangeRefPoint, responseMessage } = useViewModel();
+    const { address, neighborhood, onChange, loading, createAddress, responseMessage } = useViewModel();
 
     const [modalVisible, setModalVisible] = useState(false);
-
-    if (responseMessage === 'La dirección se creo correctamente') {
-    navigation.reset({
-        index: 0,
-        routes: [{ name: 'ClientAddressListScreen' }],
-    });
-}
-
-
-    useEffect(() => {
-        if (route.params?.refPoint) {
-            onChangeRefPoint(route.params.refPoint, route.params.latitude, route.params.longitude);
-        }
-    }, [route.params?.refPoint]);
 
     useEffect(() => {
         if (responseMessage) {
             ToastAndroid.show(responseMessage, ToastAndroid.SHORT);
             if (responseMessage === 'La dirección se creo correctamente') {
-                navigation.navigate('ClientAddressListScreen');
+                const targetScreen = route.name === 'ClientAddressCreateScreen' 
+                    ? 'ClientAddressListScreen' 
+                    : 'ProfileAddressListScreen';
+                
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: targetScreen as any }],
+                });
             }
         }
-    }
-        , [responseMessage]);
+    }, [responseMessage]);
 
     return (
         <ImageBackground
@@ -68,57 +62,23 @@ export const ClientAddresstCreateScreen = ({ navigation, route }: Props) => {
                         style={{ color: globalColors.title, fontWeight: "bold", marginTop: 10 }}
                     />
 
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPress={() => {
-                            if (!refPoint) {
-                                ToastAndroid.show('Primero debes ingresar el punto de referencia', ToastAndroid.SHORT);
-                            }
-                        }}
-                    >
-                        <InputComponent
-                            icon={'home-outline'}
-                            placeholder={'Dirección'}
-                            value={address}
-                            keyboardType={'default'}
-                            property='address'
-                            onChangeText={onChange}
-                            editable={!!refPoint}
-                        />
-                    </TouchableOpacity>
+                    <InputComponent
+                        icon={'home-outline'}
+                        placeholder={'Dirección'}
+                        value={address}
+                        keyboardType={'default'}
+                        property='address'
+                        onChangeText={onChange}
+                    />
 
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPress={() => {
-                            if (!refPoint) {
-                                ToastAndroid.show('Primero debes ingresar el punto de referencia', ToastAndroid.SHORT);
-                            }
-                        }}
-                    >
-                        <InputComponent
-                            icon={'document-text-outline'}
-                            placeholder={'Población/Villa'}
-                            value={neighborhood}
-                            keyboardType={'default'}
-                            property='neighborhood'
-                            onChangeText={onChange}
-                            editable={!!refPoint}
-                        />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        onPress={() => { navigation.navigate('ClientAddressMapScreen') }}
-                    >
-                        <InputComponent
-                            icon={'location-outline'}
-                            placeholder={'Punto de referencia'}
-                            value={refPoint}
-                            keyboardType={'default'}
-                            property='refPoint'
-                            onChangeText={onChange}
-                            editable={false}
-                        />
-                    </TouchableOpacity>
+                    <InputComponent
+                        icon={'document-text-outline'}
+                        placeholder={'Población/Villa'}
+                        value={neighborhood}
+                        keyboardType={'default'}
+                        property='neighborhood'
+                        onChangeText={onChange}
+                    />
 
                     <View style={{ marginTop: 20 }}>
                         <RoundedButtonComponent text='CREAR DIRECCIÓN' onPress={() => createAddress()} />

@@ -6,6 +6,7 @@ import { IconComponent } from '../components/IconComponent';
 import { globalColors } from '../theme/GlobalTheme';
 import { ClientStackNavigator } from './ClientStackNavigator';
 import { ClientOrderStackNavigator, ClientOrderStackParamList } from './ClientOrderStackNavigator';
+import { ProfileStackNavigator } from './ProfileStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +49,7 @@ export const ClientBottomTabsnavigator = () => {
                         <IconComponent icon="id-card-outline" color={color} size={26} />
                     )
                 }}
-                name="ProfileInfoScreen" component={ProfileInfoScreen} />
+                name="ProfileStackNavigator" component={ProfileStackNavigator} />
         </Tab.Navigator>
     );
 }
