@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Product } from '../../../../../domain/entities/Product';
 import { ShoppingBagContext } from '../../../../context/ShoppingBagContext';
+import { Alert } from 'react-native';
 
 const ClientProductDetailViewModel = (product: Product) => {
 
@@ -42,6 +43,17 @@ const ClientProductDetailViewModel = (product: Product) => {
         if (quantity > 0) {
             const productWithQuantity = { ...product, quantity };
             saveItem(productWithQuantity);
+            Alert.alert(
+                '¡Producto agregado!',
+                `${product.name} se agregó a tu carrito`,
+                [{ text: 'OK' }]
+            );
+        } else {
+            Alert.alert(
+                'Cantidad inválida',
+                'Por favor selecciona al menos 1 producto',
+                [{ text: 'OK' }]
+            );
         }
     }
 

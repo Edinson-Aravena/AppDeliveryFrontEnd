@@ -4,7 +4,7 @@ import useViewModel from './ViewModel'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { globalColors } from '../../../../theme/GlobalTheme';
 import { OrdenListItem } from './Item';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RestaurantOrderStackParamList } from '../../../../navigator/RestaurantOrderStackNavigator';
 import { DeliveryOrderStackParamList } from '../../../../navigator/DeliveryOrderStackNavigator';
@@ -20,8 +20,19 @@ const OrderListView = ({ status }: Props) => {
     const navigation = useNavigation<StackNavigationProp<DeliveryOrderStackParamList, 'DeliveryOrderListScreen'>>();
 
     useEffect(() => {
-        getOrders(user?.id!, status);
+        if (user?.id) {
+            getOrders(user.id, status);
+        }
     }, [user]);
+
+    // Actualizar la lista cada vez que la pantalla se enfoca
+    useFocusEffect(
+        React.useCallback(() => {
+            if (user?.id) {
+                getOrders(user.id, status);
+            }
+        }, [user, status])
+    );
 
     return (
         <View>

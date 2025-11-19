@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Address } from '../../../../../domain/entities/Address';
 import { GetByUserAddressUseCase } from '../../../../../domain/useCases/address/GetByUserAddress';
+import { DeleteAddressUseCase } from '../../../../../domain/useCases/address/DeleteAddress';
 import { UserContext } from '../../../../context/UserContext';
 import { CreateOrderUseCase } from '../../../../../domain/useCases/order/CreateOrder';
 import { Order } from '../../../../../domain/entities/Order';
@@ -47,13 +48,29 @@ const ClientAddressListViewModel = () => {
         setAddress(result);
     }
 
+    const deleteAddress = async (id: string) => {
+        const result = await DeleteAddressUseCase(id);
+        setResponseMessage(result.message);
+        
+        // Si la dirección eliminada era la seleccionada, limpiar la selección
+        if (checked === id) {
+            setchecked('');
+            user.address = undefined;
+            saveUserSession(user);
+        }
+        
+        // Recargar la lista de direcciones
+        await getAddress();
+    }
+
     return{
         address,
         checked,
         responseMessage,
         createOrder,
         getAddress,
-        changeRadioValue
+        changeRadioValue,
+        deleteAddress
     }
 }
 

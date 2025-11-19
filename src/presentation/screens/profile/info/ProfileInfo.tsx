@@ -15,6 +15,15 @@ export const ProfileInfoScreen = () => {
     const { user, removeUserSession } = useViewModel();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList & ProfileStackParamList>>();
+    
+    // Verificar si el usuario es repartidor
+    const isDelivery = user?.roles?.some((role: any) => 
+        role.id === 'REPARTIDOR' || role.name === 'REPARTIDOR'
+    );
+
+    console.log('User roles:', user?.roles);
+    console.log('Is delivery?', isDelivery);
+
     useEffect(() => {
         if(user.id == ''){
             navigation.replace('LoginScreen');
@@ -58,33 +67,21 @@ export const ProfileInfoScreen = () => {
                 </View>
             </View>
 
-            <View style={styles.menuContainer}>
-                <TouchableOpacity 
-                    style={styles.menuItem}
-                    onPress={() => navigation.navigate('ProfileAddressListScreen')}
-                >
-                    <View style={styles.menuItemContent}>
-                        <IconComponent icon="location-outline" color={globalColors.buttons} size={26} />
-                        <Text style={styles.menuItemText}>Mis Direcciones</Text>
-                    </View>
-                    <IconComponent icon="chevron-forward-outline" color="#666" size={24} />
-                </TouchableOpacity>
-
-                <View style={styles.menuDivider} />
-
-                <TouchableOpacity 
-                    style={styles.menuItem}
-                    onPress={() => {
-                        navigation.navigate('ProfilePaymentMethodListScreen')
-                    }}
-                >
-                    <View style={styles.menuItemContent}>
-                        <IconComponent icon="card-outline" color={globalColors.buttons} size={26} />
-                        <Text style={styles.menuItemText}>Métodos de Pago</Text>
-                    </View>
-                    <IconComponent icon="chevron-forward-outline" color="#666" size={24} />
-                </TouchableOpacity>
-            </View>
+            {/* Mostrar "Mis Direcciones" solo si NO es repartidor */}
+            {!isDelivery && (
+                <View style={styles.menuContainer}>
+                    <TouchableOpacity 
+                        style={styles.menuItem}
+                        onPress={() => navigation.navigate('ProfileAddressListScreen')}
+                    >
+                        <View style={styles.menuItemContent}>
+                            <IconComponent icon="location-outline" color={globalColors.buttons} size={26} />
+                            <Text style={styles.menuItemText}>Mis Direcciones</Text>
+                        </View>
+                        <IconComponent icon="chevron-forward-outline" color="#666" size={24} />
+                    </TouchableOpacity>
+                </View>
+            )}
 
 
             <Button

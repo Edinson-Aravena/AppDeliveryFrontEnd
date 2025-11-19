@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, FlatList, ToastAndroid } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, ToastAndroid, SafeAreaView } from 'react-native'
 import { RestaurantOrderStackParamList } from '../../../../navigator/RestaurantOrderStackNavigator'
 import { StackScreenProps } from '@react-navigation/stack'
 import { OrderDetailItem } from './Item'
@@ -33,80 +33,103 @@ export const ClientOrderDetailScreen = ({ navigation, route }: Props) => {
 
 
     return (
-        <View style={styles.container}>
-            <View style={styles.product}>
-                <FlatList
-                    data={order.products}
-                    keyExtractor={(item) => item.id!}
-                    renderItem={({ item }) => <OrderDetailItem product={item} />}
-                />
-            </View>
-            <View style={styles.info}>
+        <SafeAreaView style={styles.container}>
+            <ScrollView>
+                {/* Header */}
+                <View style={styles.header}>
+                    <IconComponent icon="receipt" size={32} color="white" />
+                    <Text style={styles.headerTitle}>Detalle del Pedido</Text>
+                </View>
 
-                <View style={styles.infoRow}>
-                    <IconComponent icon="calendar" size={26} color={"gray"} />
-                    <View style={styles.infoText}>
-                        <Text style={styles.label}>Fecha del pedido</Text>
-                        <Text style={styles.value}>{DateFormatter(order.timestamp!)}</Text>
+                {/* Products Section */}
+                <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                        <IconComponent icon="fast-food" size={24} color={globalColors.buttons} />
+                        <Text style={styles.sectionTitle}>Productos</Text>
+                    </View>
+                    <View style={styles.card}>
+                        <ScrollView style={styles.productsScroll} nestedScrollEnabled>
+                            {order.products?.map((item, index) => (
+                                <OrderDetailItem key={item.id} product={item} />
+                            ))}
+                        </ScrollView>
                     </View>
                 </View>
 
-                <View style={styles.infoRow}>
-                    <IconComponent icon="person" size={26} color={"gray"} />
-                    <View style={styles.infoText}>
-                        <Text style={styles.label}>Cliente</Text>
-                        <Text style={styles.value}>{order.client?.name} {order.client?.lastname}</Text>
+                {/* Info Section */}
+                <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                        <IconComponent icon="information-circle" size={24} color={globalColors.buttons} />
+                        <Text style={styles.sectionTitle}>Información</Text>
+                    </View>
+                    <View style={styles.card}>
+                        <View style={styles.infoRow}>
+                            <IconComponent icon="calendar" size={22} color={globalColors.buttons} />
+                            <View style={styles.infoText}>
+                                <Text style={styles.label}>Fecha del pedido</Text>
+                                <Text style={styles.value}>{DateFormatter(order.timestamp!)}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.divider} />
+
+                        <View style={styles.infoRow}>
+                            <IconComponent icon="person" size={22} color={globalColors.buttons} />
+                            <View style={styles.infoText}>
+                                <Text style={styles.label}>Cliente</Text>
+                                <Text style={styles.value}>{order.client?.name} {order.client?.lastname}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.divider} />
+
+                        <View style={styles.infoRow}>
+                            <IconComponent icon="call" size={22} color={globalColors.buttons} />
+                            <View style={styles.infoText}>
+                                <Text style={styles.label}>Teléfono</Text>
+                                <Text style={styles.value}>{order.client?.phone}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.divider} />
+
+                        <View style={styles.infoRow}>
+                            <IconComponent icon="compass" size={22} color={globalColors.buttons} />
+                            <View style={styles.infoText}>
+                                <Text style={styles.label}>Dirección</Text>
+                                <Text style={styles.value}>{order.address?.address}, {order.address?.neighborhood}</Text>
+                            </View>
+                        </View>
                     </View>
                 </View>
 
-                <View style={styles.infoRow}>
-                    <IconComponent icon="call" size={26} color={"gray"} />
-                    <View style={styles.infoText}>
-                        <Text style={styles.label}>Teléfono</Text>
-                        <Text style={styles.value}>{order.client?.phone}</Text>
+                {/* Delivery Section */}
+                <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                        <IconComponent icon="bicycle" size={24} color={globalColors.buttons} />
+                        <Text style={styles.sectionTitle}>Repartidor</Text>
+                    </View>
+                    <View style={styles.card}>
+                        <View style={styles.infoRow}>
+                            <IconComponent icon="person" size={22} color={globalColors.buttons} />
+                            <View style={styles.infoText}>
+                                <Text style={styles.label}>Repartidor asignado</Text>
+                                <Text style={styles.value}>{order.delivery?.name} {order.delivery?.lastname}</Text>
+                            </View>
+                        </View>
                     </View>
                 </View>
 
-                <View style={styles.infoRow}>
-                    <IconComponent icon="compass" size={26} color={"gray"} />
-                    <View style={styles.infoText}>
-                        <Text style={styles.label}>Dirección</Text>
-                        <Text style={styles.value}>{order.address?.address}, {order.address?.neighborhood}</Text>
+                {/* Total Section */}
+                <View style={styles.totalCard}>
+                    <View style={styles.totalHeader}>
+                        <IconComponent icon="checkmark-circle" size={20} color="white" />
+                        <Text style={styles.totalLabel}>Total Pagado</Text>
                     </View>
+                    <Text style={styles.totalAmount}>${total.toLocaleString('es-CL')}</Text>
+                    <Text style={styles.totalCurrency}>CLP</Text>
                 </View>
 
-                <View style={{ marginTop: 10 }}>
-                    <Text style={styles.deliveries}>REPARTIDOR ASIGNADO:</Text>
-                    <Text style={styles.deliveryName}>{order.delivery?.name} {order.delivery?.lastname}</Text>
-                </View>
-
-
-
-                <View style={styles.totalInfo}>
-                    <Text style={styles.total}>Total: ${total}</Text>
-                    {/* <View style={styles.button}>
-                        {
-                            order.status === 'DESPACHADO'
-                                ? (
-                                    <RoundedButtonComponent
-                                        text="INICIAR ENTREGA"
-                                        onPress={() => updateToOnTheWayOrder()}
-                                    />
-                                )
-                                : order.status === 'EN CAMINO'
-                                    ? (
-                                        <RoundedButtonComponent
-                                            text="ENTREGAR PEDIDO"
-                                            onPress={() => updateToDeliveredOrder()}
-                                        />
-                                    )
-                                    : null
-                        }
-                    </View> */}
-                </View>
-
-            </View>
-        </View>
+                <View style={styles.bottomSpacing} />
+            </ScrollView>
+        </SafeAreaView>
     )
 }
 
@@ -114,64 +137,112 @@ export const ClientOrderDetailScreen = ({ navigation, route }: Props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#f5f5f5',
     },
-    product: {
-        width: '100%',
-        height: '35%',
-    },
-    info: {
-        width: '100%',
-        height: '65%',
-        backgroundColor: 'white',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
+    header: {
+        backgroundColor: globalColors.buttons,
         padding: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+    },
+    headerTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'white',
+    },
+    section: {
+        marginTop: 16,
+        paddingHorizontal: 16,
+    },
+    sectionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 12,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    card: {
+        backgroundColor: 'white',
+        borderRadius: 12,
+        padding: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    productsScroll: {
+        maxHeight: 200,
     },
     infoRow: {
         flexDirection: 'row',
-        alignItems: 'flex-start',
-        marginBottom: 16,
+        alignItems: 'center',
+        paddingVertical: 12,
     },
     infoText: {
-        marginLeft: 10,
+        marginLeft: 12,
         flex: 1,
     },
     label: {
-        fontWeight: 'bold',
-        fontSize: 14,
+        fontSize: 13,
+        color: '#666',
+        marginBottom: 4,
     },
     value: {
-        fontSize: 14,
-        marginTop: 2,
+        fontSize: 15,
+        color: '#333',
+        fontWeight: '500',
     },
-    deliveries: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginTop: 20,
-        marginBottom: 10,
-
+    divider: {
+        height: 1,
+        backgroundColor: '#f0f0f0',
     },
-    deliveryName: {
-        fontSize: 20,
-        color: globalColors.buttons,
-        fontWeight: 'bold',
-        marginTop: 5
+    totalCard: {
+        backgroundColor: '#4CAF50',
+        borderRadius: 16,
+        padding: 20,
+        marginHorizontal: 16,
+        marginTop: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 5,
     },
-    totalInfo: {
-        marginTop: 20,
+    totalHeader: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+        marginBottom: 8,
     },
-    total: {
-        fontSize: 18,
+    totalLabel: {
+        fontSize: 16,
+        color: 'white',
+        fontWeight: '600',
+        opacity: 0.95,
+    },
+    totalAmount: {
+        fontSize: 36,
         fontWeight: 'bold',
-        color: 'black',
+        color: 'white',
+        textAlign: 'center',
+        letterSpacing: 0.5,
     },
-    button: {
-        width: '50%',
+    totalCurrency: {
+        fontSize: 14,
+        color: 'white',
+        textAlign: 'center',
+        marginTop: 2,
+        opacity: 0.9,
+        fontWeight: '500',
     },
-    dropDown: {
-        marginTop: 10,
-    }
+    bottomSpacing: {
+        height: 20,
+    },
 })

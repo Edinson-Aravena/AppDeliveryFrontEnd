@@ -1,12 +1,13 @@
 import React from 'react'
-import { View, Text, ToastAndroid } from 'react-native'
+import { View, Text, ToastAndroid, SafeAreaView, TouchableOpacity } from 'react-native'
 import useViewModel from './ViewModel'
 import { FlatList } from 'react-native-gesture-handler'
 import { ShoppingBagItem } from './Item'
-import { RoundedButtonComponent } from '../../../components'
+import { RoundedButtonComponent, IconComponent } from '../../../components'
 import { StyleSheet } from "react-native"
 import { ClientStackParamList } from '../../../navigator/ClientStackNavigator'
 import { StackScreenProps } from '@react-navigation/stack'
+import { globalColors } from '../../../theme/GlobalTheme'
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientShoppingBagScreen'> { }
 
@@ -24,49 +25,100 @@ export const ClientShoppingBagScreen = ({navigation, route}: Props) => {
     };
 
     return (
-        <View style={styles.container}>
-            {(!shoppingBag || shoppingBag.length === 0) ? (
-                <View style={styles.emptyContainer}>
-                    <Text style={styles.emptyText}>🛒 El carrito está vacío</Text>
-                    <Text style={styles.emptySubtext}>Agrega productos para comenzar</Text>
-                </View>
-            ) : (
-                <View style={styles.listContainer}>
-                    <FlatList
-                        data={shoppingBag}
-                        keyExtractor={(item) => item.id!}
-                        renderItem={({ item }) =>
-                            <ShoppingBagItem
-                                product={item}
-                                addItem={addItem}
-                                subtractItem={subtractItem}
-                                deleteItem={deleteItem}
-                            />}
-                    />
-                </View>
-            )}
-
-            <View style={styles.totalToPay}>
-                <View style={styles.totalInfo}>
-                    <Text style={styles.totalText}>Total</Text>
-                    <Text>${total}</Text>
-                </View>
-
-                <View style={styles.buttonAdd}>
-                    <RoundedButtonComponent text='Pagar' onPress={handlePayment} />
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <View style={styles.headerContent}>
+                    <IconComponent icon="cart" color="#fff" size={28} />
+                    <View style={styles.headerTextContainer}>
+                        <Text style={styles.headerTitle}>Mi orden</Text>
+                        <Text style={styles.headerSubtitle}>
+                            {shoppingBag?.length || 0} {shoppingBag?.length === 1 ? 'producto' : 'productos'}
+                        </Text>
+                    </View>
                 </View>
             </View>
-        </View>
+
+            {(!shoppingBag || shoppingBag.length === 0) ? (
+                <View style={styles.emptyContainer}>
+                    <IconComponent icon="cart-outline" color="#ccc" size={80} />
+                    <Text style={styles.emptyText}>El carrito está vacío</Text>
+                    <Text style={styles.emptySubtext}>Agrega productos para comenzar tu orden</Text>
+                </View>
+            ) : (
+                <FlatList
+                    data={shoppingBag}
+                    keyExtractor={(item) => item.id!}
+                    renderItem={({ item }) =>
+                        <ShoppingBagItem
+                            product={item}
+                            addItem={addItem}
+                            subtractItem={subtractItem}
+                            deleteItem={deleteItem}
+                        />}
+                    contentContainerStyle={styles.listContent}
+                    showsVerticalScrollIndicator={false}
+                />
+            )}
+
+            <View style={styles.footer}>
+                <View style={styles.totalContainer}>
+                    <View style={styles.totalRow}>
+                        <Text style={styles.totalLabel}>Total</Text>
+                        <Text style={styles.totalAmount}>$ {total.toLocaleString('es-CL')}</Text>
+                    </View>
+                    <Text style={styles.totalCurrency}>CLP</Text>
+                </View>
+
+                <TouchableOpacity 
+                    style={styles.payButton}
+                    onPress={handlePayment}
+                >
+                    <IconComponent icon="card" color="#fff" size={20} />
+                    <Text style={styles.payButtonText}>Pagar</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#f5f5f5',
     },
-    listContainer: {
+    header: {
+        backgroundColor: globalColors.buttons,
+        paddingTop: 20,
+        paddingBottom: 24,
+        paddingHorizontal: 20,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 4,
+    },
+    headerContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+    },
+    headerTextContainer: {
         flex: 1,
+    },
+    headerTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#fff',
+        marginBottom: 4,
+    },
+    headerSubtitle: {
+        fontSize: 14,
+        color: 'rgba(255, 255, 255, 0.8)',
+    },
+    listContent: {
+        paddingVertical: 8,
     },
     emptyContainer: {
         flex: 1,
@@ -78,31 +130,71 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: '#666',
-        marginBottom: 10,
+        marginTop: 20,
+        marginBottom: 8,
     },
     emptySubtext: {
-        fontSize: 16,
+        fontSize: 14,
         color: '#999',
         textAlign: 'center',
     },
-    totalToPay: {
+    footer: {
+        backgroundColor: '#fff',
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 10,
+    },
+    totalContainer: {
         flexDirection: 'row',
-        height: 70,
-        backgroundColor: '#f2f2f2',
-        justifyContent: 'space-around',
         alignItems: 'center',
-        paddingHorizontal: 30,
-        borderTopWidth: 1,
-        borderTopColor: '#e0e0e0',
+        justifyContent: 'space-between',
+        backgroundColor: '#f8f8f8',
+        padding: 16,
+        borderRadius: 12,
+        marginBottom: 16,
     },
-    totalInfo: {
-        alignItems: 'center'
+    totalRow: {
+        flex: 1,
     },
-    totalText: {
+    totalLabel: {
+        fontSize: 14,
+        color: '#666',
+        fontWeight: '600',
+        marginBottom: 4,
+    },
+    totalAmount: {
+        fontSize: 28,
         fontWeight: 'bold',
-        fontSize: 17
+        color: '#1a1a1a',
     },
-    buttonAdd: {
-        width: '50%'
-    }
+    totalCurrency: {
+        fontSize: 14,
+        color: '#666',
+        fontWeight: '600',
+    },
+    payButton: {
+        backgroundColor: '#4caf50',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 16,
+        borderRadius: 12,
+        gap: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 4,
+    },
+    payButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
 });

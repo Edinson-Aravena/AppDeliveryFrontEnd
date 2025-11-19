@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, View, ImageBackground, Image, ToastAndroid, TouchableOpacity, ScrollView, TextInput, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, ToastAndroid, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { globalColors } from '../../../theme/GlobalTheme';
-import { TitleComponent, InputComponent, RoundedButtonComponent } from '../../../components';
-import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack'
+import { InputComponent, RoundedButtonComponent } from '../../../components';
+import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../../../navigator/StackNavigator';
 import useViewModel from './ViewModel'
 import { PhoneNumberInputComponent } from '../../../components/InputComponentPhone';
@@ -32,95 +32,97 @@ export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
     console.log(phone)
 
     return (
-        <ImageBackground
-            style={styles.container}
-            source={require('../../../assets/background2.jpg')}
-            resizeMode="cover"
-        >
+        <View style={styles.container}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                {/* Header with background */}
+                <View style={styles.header}>
+                    <Text style={styles.headerTitle}>Actualizar Perfil</Text>
+                </View>
 
-            <View style={styles.logoContainer}>
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    {
-                        image == ''
-                            ? <Image
-                                style={styles.logoImage}
-                                source={require('../../../assets/user.png')}
-                                //source={{uri: user?.image}}
-                            />
-                            : <Image
-                                style={styles.logoImage}
-                                source={{ uri: image }}
-                            />
-                    }
+                {/* Profile Image Section */}
+                <View style={styles.imageSection}>
+                    <TouchableOpacity 
+                        onPress={() => setModalVisible(true)}
+                        style={styles.imageContainer}
+                    >
+                        {
+                            image == ''
+                                ? <Image
+                                    style={styles.profileImage}
+                                    source={require('../../../assets/user.png')}
+                                />
+                                : <Image
+                                    style={styles.profileImage}
+                                    source={{ uri: image }}
+                                />
+                        }
+                        <View style={styles.cameraButton}>
+                            <Text style={styles.cameraIcon}>📷</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.imageHint}>Toca para cambiar foto</Text>
+                </View>
 
-                </TouchableOpacity>
-                <TitleComponent
-                    text="Selecciona una imagen "
-                    size={30}
-                    style={{ color: globalColors.buttons, fontWeight: "bold", marginTop: 10 }}
-                />
-            </View>
-
-            <View style={styles.form}>
-                <ScrollView>
-
-                    <TitleComponent
-                        text="ACTUALIZAR PERFIL"
-                        size={20}
-                        style={{ color: globalColors.title, fontWeight: "bold", marginTop: 10 }}
-                    />
-
-                    <InputComponent
-                        icon={'person-outline'}
-                        placeholder={'Nombres'}
-                        value={name}
-                        keyboardType={'default'}
-                        property='name'
-                        onChangeText={onChange}
-                    />
-
-                    <InputComponent
-                        icon={'person-outline'}
-                        placeholder={'Apellidos'}
-                        value={lastname}
-                        keyboardType={'default'}
-                        property='lastname'
-                        onChangeText={onChange}
-                    />
-
-
-                    <PhoneNumberInputComponent
-                        icon="call-outline"
-                        placeholder="Número de teléfono"
-                        value={phone}
-                        keyboardType="phone-pad"
-                        property="phone"
-                        onChangeText={onChange}
-                    />
-
-                    <View style={{ marginTop: 10 }}>
-                        <RoundedButtonComponent text='ACTUALIZAR' onPress={() => {
-                            update()
-                        }} />
+                {/* Form Section */}
+                <View style={styles.formSection}>
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.inputLabel}>Nombre</Text>
+                        <InputComponent
+                            icon={'person-outline'}
+                            placeholder={'Tu nombre'}
+                            value={name}
+                            keyboardType={'default'}
+                            property='name'
+                            onChangeText={onChange}
+                        />
                     </View>
 
-                </ScrollView>
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.inputLabel}>Apellido</Text>
+                        <InputComponent
+                            icon={'person-outline'}
+                            placeholder={'Tu apellido'}
+                            value={lastname}
+                            keyboardType={'default'}
+                            property='lastname'
+                            onChangeText={onChange}
+                        />
+                    </View>
+
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.inputLabel}>Teléfono</Text>
+                        <PhoneNumberInputComponent
+                            icon="call-outline"
+                            placeholder="Número de teléfono"
+                            value={phone}
+                            keyboardType="phone-pad"
+                            property="phone"
+                            onChangeText={onChange}
+                        />
+                    </View>
+
+                    <View style={styles.buttonContainer}>
+                        <RoundedButtonComponent 
+                            text='ACTUALIZAR' 
+                            onPress={() => update()} 
+                        />
+                    </View>
+                </View>
+
                 <ModalPickImage
                     openGallery={pickImage}
                     openCamera={takePhoto}
                     modalUseState={modalVisible}
                     setModalUseState={setModalVisible}
                 />
-                {
-                    loading &&
-                    <ActivityIndicator style={styles.loading} size="large" color={globalColors.buttons} />
-
-                }
-
-            </View>
-
-
-        </ImageBackground>
+                
+                {loading && (
+                    <View style={styles.loadingOverlay}>
+                        <ActivityIndicator size="large" color={globalColors.buttons} />
+                    </View>
+                )}
+            </ScrollView>
+        </View>
     );
 }
 
@@ -128,46 +130,85 @@ export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-end',
+        backgroundColor: '#f5f5f5',
     },
-    form: {
-        width: '100%',
-        height: '50%',
-        backgroundColor: globalColors.background,
-        borderTopLeftRadius: 40,
-        borderTopRightRadius: 40,
+    header: {
+        backgroundColor: globalColors.buttons,
+        paddingTop: 60,
+        paddingBottom: 40,
         paddingHorizontal: 20,
-        paddingVertical: 10,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
     },
-    logoContainer: {
-        marginBottom: 20,
-        position: 'absolute',
-        top:'15%',
-        alignSelf: 'center',
-        alignItems: 'center',
-    },
-    logoImage: {
-        width: 100,
-        height: 100,
-    },
-    formRegister: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 20,
-    },
-    formRegisterText: {
-        fontStyle: 'italic',
-        color: globalColors.buttons,
-        borderBottomColor: globalColors.buttons,
-        borderBottomWidth: 1,
+    headerTitle: {
+        fontSize: 28,
         fontWeight: 'bold',
-        marginLeft: 5,
+        color: 'white',
+        textAlign: 'center',
     },
-    loading: {
+    imageSection: {
+        alignItems: 'center',
+        marginTop: -50,
+        marginBottom: 20,
+    },
+    imageContainer: {
+        position: 'relative',
+    },
+    profileImage: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        borderWidth: 4,
+        borderColor: 'white',
+        backgroundColor: '#f0f0f0',
+    },
+    cameraButton: {
         position: 'absolute',
         bottom: 0,
-        top: 0,
         right: 0,
+        backgroundColor: globalColors.buttons,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 3,
+        borderColor: 'white',
+    },
+    cameraIcon: {
+        fontSize: 16,
+    },
+    imageHint: {
+        marginTop: 12,
+        fontSize: 14,
+        color: '#666',
+        fontWeight: '500',
+    },
+    formSection: {
+        paddingHorizontal: 20,
+        paddingBottom: 30,
+    },
+    inputGroup: {
+        marginBottom: 20,
+    },
+    inputLabel: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#333',
+        marginBottom: 8,
+        marginLeft: 4,
+    },
+    buttonContainer: {
+        marginTop: 10,
+    },
+    loadingOverlay: {
+        position: 'absolute',
+        top: 0,
         left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

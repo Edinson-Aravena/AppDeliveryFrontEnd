@@ -46,16 +46,6 @@ export const ClientCategoryListScreen = ({ navigation, route }: Props) => {
                     numColumns={numColumns}
                     contentContainerStyle={styles.gridContainer}
                     columnWrapperStyle={styles.columnWrapper}
-                    ListFooterComponent={
-                        <View style={styles.footer}>
-                            <Text style={styles.footerText}>Desplaza para ver más</Text>
-                            <IconComponent 
-                                icon={'chevron-down'} 
-                                color={globalColors.info} 
-                                size={30} 
-                            />
-                        </View>
-                    }
                 />
             </View>
         </GestureHandlerRootView>

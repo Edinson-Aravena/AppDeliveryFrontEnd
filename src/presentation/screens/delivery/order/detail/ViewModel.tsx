@@ -9,7 +9,7 @@ interface DropDownProps {
     value: string;
 }
 
-const RestauranteDetailViewModel = (order: Order) => {
+const RestauranteDetailViewModel = (order: Order, navigation: any) => {
 
     const [total, setTotal] = useState(0);
     const [deliveryMen, setDeliveryMen] = useState<User[]>([]);
@@ -25,18 +25,33 @@ const RestauranteDetailViewModel = (order: Order) => {
     const updateToDeliveredOrder = async () => {
         const result = await updateToDelivered(order);
         setResponseMessage(result.message!);
+        
+        if (result.success) {
+            // Navegar de vuelta después de 1 segundo
+            setTimeout(() => {
+                navigation.goBack();
+            }, 1000);
+        }
     }
 
     const updateToOnTheWayOrder = async () => {
         const result = await updateToOnTheWay(order);
         setResponseMessage(result.message!);
+        
+        if (result.success) {
+            // Navegar de vuelta después de 1 segundo
+            setTimeout(() => {
+                navigation.goBack();
+            }, 1000);
+        }
     }
 
     const getTotal = () => {
-        let total = 0;
+        let totalAmount = 0;
         order.products.forEach(product => {
-            setTotal(product.price * product.quantity!)
+            totalAmount += product.price * product.quantity!;
         });
+        setTotal(totalAmount);
     }
 
     return {

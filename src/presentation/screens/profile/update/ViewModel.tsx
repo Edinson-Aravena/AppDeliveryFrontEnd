@@ -72,22 +72,40 @@ export const profileUpdateViewModel = (user: User ) => {
         if (isValidForm()) {
             setLoading(true)
 
-            let response = {} as ResponseAPIDelivery;
+            try {
+                let response = {} as ResponseAPIDelivery;
 
-            if(values.image?.includes('https://')){
-                response = await (UpdateUserUseCase(values));
-            }else{
-                response = await UpdateWithImageUserUseCase(values, file!);
-            }
-            
-            console.log("RESULT: " + JSON.stringify(response))
-            setLoading(false)
-            
-            if(response.success){
-                saveUserSession(response.data);
-                setsuccessMessage(response.message);
-            }else{
-                setErrorMessage(response.message);
+                if(values.image?.includes('https://')){
+                    response = await (UpdateUserUseCase(values));
+                }else{
+                    response = await UpdateWithImageUserUseCase(values, file!);
+                }
+                
+                console.log("RESULT: " + JSON.stringify(response))
+                setLoading(false)
+                
+                if(response.success){
+                    // Asegurar que roles es un array
+                    if(response.data.roles && typeof response.data.roles === 'string'){
+                        response.data.roles = JSON.parse(response.data.roles);
+                    }
+                    
+                    await saveUserSession(response.data);
+                    
+                    // Actualizar el estado local con la nueva imagen
+                    setValues(response.data);
+                    
+                    // Limpiar el estado del archivo para evitar problemas
+                    setFile(undefined);
+                    
+                    setsuccessMessage(response.message);
+                }else{
+                    setErrorMessage(response.message);
+                }
+            } catch (error) {
+                console.log("Error en update:", error);
+                setLoading(false);
+                setErrorMessage('Error al actualizar el perfil');
             }
         }
 

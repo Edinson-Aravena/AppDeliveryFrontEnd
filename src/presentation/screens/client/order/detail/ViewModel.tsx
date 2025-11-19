@@ -33,10 +33,11 @@ const ClientOrderDetailViewModel = (order: Order) => {
     }
 
     const getTotal = () => {
-        let total = 0;
+        let totalAmount = 0;
         order.products.forEach(product => {
-            setTotal(product.price * product.quantity!)
+            totalAmount += product.price * product.quantity!;
         });
+        setTotal(totalAmount);
     }
 
     return {

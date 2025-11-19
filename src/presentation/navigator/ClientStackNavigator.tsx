@@ -14,7 +14,6 @@ import { ClientAddressMapScreen } from "../screens/client/address/map/AddressMap
 import ClientPaymentFormScreen from "../screens/client/payment/form/PaymentForm";
 import { ClientPaymentInstallmentsScreen } from "../screens/client/payment/installments/PaymentInstallments";
 import { ClientPaymentSuccessScreen } from "../screens/client/payment/success/PaymentSuccessScreen";
-import ClientPaymentMethodSelectScreen from "../screens/client/payment/select/PaymentMethodSelect";
 import { ResponseMercadoPagoCardToken } from '../../Data/sources/remote/models/ResponseMercadoPagoCardToken';
 
 export type ClientStackParamList = {
@@ -25,18 +24,8 @@ export type ClientStackParamList = {
     ClientAddressListScreen: undefined;
     ClientAddressCreateScreen: {refPoint: string, latitude: number, longitude: number} | undefined;
     ClientAddressMapScreen: undefined;
-    ClientPaymentMethodSelectScreen: undefined;
-    ClientPaymentFormScreen: {
-        savedCardData?: {
-            cardHolderName: string;
-            cardNumber?: string;
-            expirationMonth: number;
-            expirationYear: number;
-            identificationType?: string;
-            identificationNumber?: string;
-        }
-    } | undefined;
-    ClientPaymentInstallmentsScreen: {cardToken: ResponseMercadoPagoCardToken, fromSavedCard?: boolean};
+    ClientPaymentFormScreen: undefined;
+    ClientPaymentInstallmentsScreen: {cardToken: ResponseMercadoPagoCardToken};
     ClientPaymentSuccessScreen: undefined;
 }
 
@@ -128,14 +117,6 @@ export const ClientStackNavigator = () => {
                     component={ClientAddressMapScreen}
                     options={{
                         title: 'Ubica tu dirección',
-                        headerShown: true,
-                    }}
-                />
-                <Stack.Screen
-                    name="ClientPaymentMethodSelectScreen"
-                    component={ClientPaymentMethodSelectScreen}
-                    options={{
-                        title: 'Método de pago',
                         headerShown: true,
                     }}
                 />

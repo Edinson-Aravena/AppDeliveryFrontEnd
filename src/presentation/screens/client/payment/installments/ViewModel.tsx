@@ -33,7 +33,7 @@ const ClientPaymentInstallmentsViewModel = (cardToken: ResponseMercadoPagoCardTo
 
     const createPayment = async () => {
         const data: PaymentParams = {
-            installments: value!,
+            installments: '1', // Siempre 1 cuota
             issuer_id: installmentData?.issuer.id!,
             payment_method_id: installmentData?.payment_method_id!,
             transaction_amount: total,

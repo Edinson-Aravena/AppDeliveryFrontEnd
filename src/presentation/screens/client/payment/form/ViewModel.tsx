@@ -11,39 +11,28 @@ interface DropDownProps {
     value: string;
 }
 
-interface SavedCardData {
-    cardHolderName?: string;
-    cardNumber?: string;
-    expirationMonth?: number;
-    expirationYear?: number;
-    identificationType?: string;
-    identificationNumber?: string;
-}
-
-const ClientPaymentFormViewModel = (savedCardData?: SavedCardData) => {
+const ClientPaymentFormViewModel = () => {
 
     const creditCardRef = useRef() as any;
     const [values, setValues] = useState({
         brand: '',
         cvv: '',
-        expiration: savedCardData?.expirationMonth && savedCardData?.expirationYear 
-            ? `${String(savedCardData.expirationMonth).padStart(2, '0')}/${String(savedCardData.expirationYear).slice(-2)}`
-            : '',
-        holder: savedCardData?.cardHolderName || '',
-        number: savedCardData?.cardNumber || '',
+        expiration: '',
+        holder: '',
+        number: '',
     })
 
     const [identificationValues, setIdentificationValues] = useState({
-        identificationType: savedCardData?.identificationType || '',
-        identificationNumber: savedCardData?.identificationNumber || '',
+        identificationType: '',
+        identificationNumber: '',
     })
 
-    const [value, setValue] = useState(savedCardData?.identificationType || null);
+    const [value, setValue] = useState(null);
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState<DropDownProps[]>([]);
     const [cardToken, setCardToken] = useState<ResponseMercadoPagoCardToken>()
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null); // Nuevo estado para errores
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         onChange('identificationType', value);

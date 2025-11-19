@@ -3,22 +3,15 @@ import { ProfileInfoScreen } from "../screens/profile/info/ProfileInfo";
 import { ClientAddressListScreen } from "../screens/client/address/list/AddressList";
 import { ClientAddresstCreateScreen } from "../screens/client/address/create/AddressCreate";
 import { ClientAddressMapScreen } from "../screens/client/address/map/AddressMap";
-import { ProfilePaymentMethodListScreen } from "../screens/profile/payment/list/PaymentMethodList";
-import ClientPaymentFormScreen from "../screens/client/payment/form/PaymentForm";
-import { ClientPaymentInstallmentsScreen } from "../screens/client/payment/installments/PaymentInstallments";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { IconComponent } from '../components/IconComponent';
 import { globalColors } from "../theme/GlobalTheme";
-import { ResponseMercadoPagoCardToken } from '../../Data/sources/remote/models/ResponseMercadoPagoCardToken';
 
 export type ProfileStackParamList = {
     ProfileInfoScreen: undefined;
     ProfileAddressListScreen: undefined;
     ProfileAddressCreateScreen: {refPoint: string, latitude: number, longitude: number} | undefined;
     ProfileAddressMapScreen: undefined;
-    ProfilePaymentMethodListScreen: undefined;
-    ProfilePaymentFormScreen: undefined;
-    ProfilePaymentInstallmentsScreen: {cardToken: ResponseMercadoPagoCardToken};
 }
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
@@ -68,43 +61,6 @@ export const ProfileStackNavigator = () => {
                 }}
                 name="ProfileAddressMapScreen" 
                 component={ClientAddressMapScreen} 
-            />
-
-            <Stack.Screen
-                options={({ route, navigation }) => ({
-                    title: 'Métodos de pago',
-                    headerShown: true,
-                    headerRight: () => (
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('ProfilePaymentFormScreen')}
-                            style={{
-                                marginRight: 10,
-                            }}
-                        >
-                            <IconComponent icon="add-circle-outline" color={globalColors.buttons} size={26} />
-                        </TouchableOpacity>
-                    ),
-                })}
-                name="ProfilePaymentMethodListScreen" 
-                component={ProfilePaymentMethodListScreen} 
-            />
-
-            <Stack.Screen
-                options={{
-                    title: 'Agregar tarjeta',
-                    headerShown: true,
-                }}
-                name="ProfilePaymentFormScreen" 
-                component={ClientPaymentFormScreen} 
-            />
-
-            <Stack.Screen
-                options={{
-                    title: 'Cuotas',
-                    headerShown: true,
-                }}
-                name="ProfilePaymentInstallmentsScreen" 
-                component={ClientPaymentInstallmentsScreen} 
             />
         </Stack.Navigator>
     );
