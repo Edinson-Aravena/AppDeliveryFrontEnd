@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { View, useWindowDimensions, Text, Platform, StatusBar,  FlatList } from 'react-native'
+import { View, useWindowDimensions, Text, Platform, StatusBar,  FlatList, StyleSheet } from 'react-native'
 import useViewModel from './ViewModel'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { globalColors } from '../../../../theme/GlobalTheme';
@@ -10,10 +10,47 @@ import { ClientOrderStackParamList } from '../../../../navigator/ClientOrderStac
 import { useCallback } from 'react';
 import { OrderContext } from '../../../../context/OrderContext';
 import { UserContext } from '../../../../context/UserContext';
+import { IconComponent } from '../../../../components';
 
 interface Props {
     status: string;
 }
+
+// Componente de estado vacío
+const EmptyState = ({ status }: { status: string }) => {
+    const messages = {
+        'PAGADO': {
+            icon: 'checkmark-circle-outline',
+            title: 'No tienes pedidos pagados',
+            message: 'Tus pedidos pagados aparecerán aquí'
+        },
+        'DESPACHADO': {
+            icon: 'cube-outline',
+            title: 'No tienes pedidos despachados',
+            message: 'Cuando tu pedido sea despachado, aparecerá aquí'
+        },
+        'EN CAMINO': {
+            icon: 'bicycle-outline',
+            title: 'No tienes pedidos en camino',
+            message: 'Los pedidos que están siendo entregados aparecerán aquí'
+        },
+        'ENTREGADO': {
+            icon: 'checkmark-done-circle-outline',
+            title: 'No tienes pedidos entregados',
+            message: 'El historial de tus pedidos entregados aparecerá aquí'
+        }
+    };
+
+    const content = messages[status as keyof typeof messages] || messages['PAGADO'];
+
+    return (
+        <View style={styles.emptyContainer}>
+            <IconComponent icon={content.icon} size={80} color="#ccc" />
+            <Text style={styles.emptyTitle}>{content.title}</Text>
+            <Text style={styles.emptyMessage}>{content.message}</Text>
+        </View>
+    );
+};
 
 const OrderListView = ({ status }: Props) => {
 
@@ -30,23 +67,28 @@ const OrderListView = ({ status }: Props) => {
         }, [user?.id, status, getOrders])
     );
 
+    const data = 
+        status === 'PAGADO' 
+        ? ordersPayed 
+        : status === 'DESPACHADO' 
+        ? ordersDispatched 
+        : status === 'EN CAMINO' 
+        ? ordersOnTheWay
+        : status === 'ENTREGADO'
+        ? ordersDelivery
+        : [];
+
     return (
-        <View>
-            <FlatList
-                data={
-                    status === 'PAGADO' 
-                    ? ordersPayed 
-                    : status === 'DESPACHADO' 
-                    ? ordersDispatched 
-                    : status === 'EN CAMINO' 
-                    ? ordersOnTheWay
-                    : status === 'ENTREGADO'
-                    ? ordersDelivery
-                    : []
-                }
-                keyExtractor={(item) => item.id!.toString()}
-                renderItem={({ item }) => <OrdenListItem order={item} navigation={navigation}/>}
-            />
+        <View style={{ flex: 1 }}>
+            {data.length === 0 ? (
+                <EmptyState status={status} />
+            ) : (
+                <FlatList
+                    data={data}
+                    keyExtractor={(item) => item.id!.toString()}
+                    renderItem={({ item }) => <OrdenListItem order={item} navigation={navigation}/>}
+                />
+            )}
         </View>
     )
 }
@@ -112,4 +154,28 @@ export const ClientOrderListScreen = () => {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 100,
+        paddingHorizontal: 40,
+    },
+    emptyTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#666',
+        marginTop: 20,
+        textAlign: 'center',
+    },
+    emptyMessage: {
+        fontSize: 14,
+        color: '#999',
+        marginTop: 8,
+        textAlign: 'center',
+        lineHeight: 20,
+    },
+});
 

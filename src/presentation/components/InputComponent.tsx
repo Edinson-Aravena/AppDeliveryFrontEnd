@@ -24,6 +24,16 @@ export const InputComponent = ({
     editable = true,
     onChangeText }: InputProps) => {
 
+    const handleTextChange = (text: string) => {
+        // Si es campo de nombre o apellido, remover números
+        if (property === 'name' || property === 'lastname') {
+            const textWithoutNumbers = text.replace(/[0-9]/g, '');
+            onChangeText(property, textWithoutNumbers);
+        } else {
+            onChangeText(property, text);
+        }
+    };
+
     return (
         <View style={styles.formInput}>
             <IconComponent icon={icon} color={globalColors.buttons} size={40} />
@@ -32,7 +42,7 @@ export const InputComponent = ({
                 placeholder={placeholder}
                 keyboardType={keyboardType}
                 value={value}
-                onChangeText={text => onChangeText(property, text)}
+                onChangeText={handleTextChange}
                 secureTextEntry={secureTextEntry}
                 editable={editable}
             />

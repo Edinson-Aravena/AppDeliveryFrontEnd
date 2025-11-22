@@ -9,7 +9,8 @@ import {
     Dimensions, 
     ToastAndroid,
     TouchableOpacity,
-    Image
+    Image,
+    TextInput
 } from 'react-native'
 import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator'
 import { ProfileStackParamList } from '../../../../navigator/ProfileStackNavigator'
@@ -30,7 +31,7 @@ export const ClientPaymentInstallmentsScreen = ({ navigation, route }: Props | P
 
     const { cardToken } = route.params;
     const { responseMessage, loading, getInstallments, createPayment } = useViewModel(cardToken);
-    const { shoppingBag, total } = useContext(ShoppingBagContext);
+    const { shoppingBag, total, anotaciones } = useContext(ShoppingBagContext);
     const { user } = useContext(UserContext);
 
     useEffect(() => {
@@ -44,7 +45,7 @@ export const ClientPaymentInstallmentsScreen = ({ navigation, route }: Props | P
     }, [responseMessage])
 
     const handlePress = () => {
-        createPayment();
+        createPayment(anotaciones);
     };
 
     return (
@@ -99,6 +100,17 @@ export const ClientPaymentInstallmentsScreen = ({ navigation, route }: Props | P
                         </View>
                     </View>
                 </View>
+
+                {anotaciones && (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>
+                            <IconComponent icon="create-outline" size={20} color={globalColors.buttons} /> Instrucciones especiales
+                        </Text>
+                        <View style={styles.notesDisplay}>
+                            <Text style={styles.notesText}>{anotaciones}</Text>
+                        </View>
+                    </View>
+                )}
 
                 {/* Total */}
                 <View style={styles.totalSection}>
@@ -262,6 +274,18 @@ const styles = StyleSheet.create({
     paymentSubtext: {
         fontSize: 12,
         color: '#666',
+    },
+    notesDisplay: {
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#e0e0e0',
+        borderRadius: 12,
+        padding: 12,
+    },
+    notesText: {
+        fontSize: 14,
+        color: '#333',
+        lineHeight: 20,
     },
     totalSection: {
         backgroundColor: '#fff',

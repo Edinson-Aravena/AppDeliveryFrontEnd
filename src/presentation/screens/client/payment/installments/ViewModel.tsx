@@ -31,9 +31,9 @@ const ClientPaymentInstallmentsViewModel = (cardToken: ResponseMercadoPagoCardTo
         }
     }, [installments])
 
-    const createPayment = async () => {
+    const createPayment = async (anotaciones?: string) => {
         const data: PaymentParams = {
-            installments: '1', // Siempre 1 cuota
+            installments: 1, // Siempre 1 cuota
             issuer_id: installmentData?.issuer.id!,
             payment_method_id: installmentData?.payment_method_id!,
             transaction_amount: total,
@@ -49,6 +49,7 @@ const ClientPaymentInstallmentsViewModel = (cardToken: ResponseMercadoPagoCardTo
                 id_client: user.id!,
                 id_address: user.address?.id!,
                 products: shoppingBag,
+                anotaciones: anotaciones || undefined,
             }
         }
         console.log(user.email, cardToken.cardholder.identification.number)

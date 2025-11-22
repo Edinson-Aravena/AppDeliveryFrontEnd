@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, ToastAndroid, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, Text, ToastAndroid, SafeAreaView, TouchableOpacity, TextInput } from 'react-native'
 import useViewModel from './ViewModel'
 import { FlatList } from 'react-native-gesture-handler'
 import { ShoppingBagItem } from './Item'
@@ -14,7 +14,7 @@ interface Props extends StackScreenProps<ClientStackParamList, 'ClientShoppingBa
 
 export const ClientShoppingBagScreen = ({navigation, route}: Props) => {
 
-    const { shoppingBag, total, addItem, deleteItem, subtractItem} = useViewModel();
+    const { shoppingBag, total, addItem, deleteItem, subtractItem, anotaciones, setAnotaciones} = useViewModel();
 
     const handlePayment = () => {
         if (!shoppingBag || shoppingBag.length === 0) {
@@ -45,19 +45,40 @@ export const ClientShoppingBagScreen = ({navigation, route}: Props) => {
                     <Text style={styles.emptySubtext}>Agrega productos para comenzar tu orden</Text>
                 </View>
             ) : (
-                <FlatList
-                    data={shoppingBag}
-                    keyExtractor={(item) => item.id!}
-                    renderItem={({ item }) =>
-                        <ShoppingBagItem
-                            product={item}
-                            addItem={addItem}
-                            subtractItem={subtractItem}
-                            deleteItem={deleteItem}
-                        />}
-                    contentContainerStyle={styles.listContent}
-                    showsVerticalScrollIndicator={false}
-                />
+                <>
+                    <FlatList
+                        data={shoppingBag}
+                        keyExtractor={(item) => item.id!}
+                        renderItem={({ item }) =>
+                            <ShoppingBagItem
+                                product={item}
+                                addItem={addItem}
+                                subtractItem={subtractItem}
+                                deleteItem={deleteItem}
+                            />}
+                        contentContainerStyle={styles.listContent}
+                        showsVerticalScrollIndicator={false}
+                    />
+                    
+                    {/* Sección de Anotaciones */}
+                    <View style={styles.notesSection}>
+                        <View style={styles.notesTitleRow}>
+                            <IconComponent icon="create-outline" color={globalColors.buttons} size={20} />
+                            <Text style={styles.notesTitle}>Instrucciones especiales</Text>
+                        </View>
+                        <TextInput
+                            style={styles.notesInput}
+                            placeholder="Ej: Sin mayonesa, sin cebolla, extra salsa..."
+                            placeholderTextColor="#999"
+                            multiline
+                            numberOfLines={3}
+                            value={anotaciones}
+                            onChangeText={setAnotaciones}
+                            maxLength={200}
+                        />
+                        <Text style={styles.charCount}>{anotaciones.length}/200</Text>
+                    </View>
+                </>
             )}
 
             <View style={styles.footer}>
@@ -137,6 +158,46 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#999',
         textAlign: 'center',
+    },
+    notesSection: {
+        backgroundColor: '#fff',
+        marginHorizontal: 16,
+        marginVertical: 8,
+        padding: 16,
+        borderRadius: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    notesTitleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 12,
+    },
+    notesTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#1a1a1a',
+    },
+    notesInput: {
+        backgroundColor: '#f8f8f8',
+        borderRadius: 8,
+        padding: 12,
+        fontSize: 14,
+        color: '#1a1a1a',
+        minHeight: 80,
+        textAlignVertical: 'top',
+        borderWidth: 1,
+        borderColor: '#e0e0e0',
+    },
+    charCount: {
+        fontSize: 12,
+        color: '#999',
+        textAlign: 'right',
+        marginTop: 4,
     },
     footer: {
         backgroundColor: '#fff',

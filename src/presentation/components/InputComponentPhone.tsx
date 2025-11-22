@@ -42,8 +42,10 @@ export const PhoneNumberInputComponent = ({
 
     const handlePhoneChange = (text: string) => {
         const cleanedNumber = text.replace(/[^0-9]/g, "");
-        setPhoneNumber(cleanedNumber);
-        onChangeText(property, `${countryCode}${cleanedNumber}`);
+        // Limitar a 9 dígitos
+        const limitedNumber = cleanedNumber.slice(0, 9);
+        setPhoneNumber(limitedNumber);
+        onChangeText(property, `${countryCode}${limitedNumber}`);
     };
 
     const handleCountryChange = (newCode: string) => {

@@ -11,6 +11,7 @@ export interface Order {
     lat?: number;
     lng?: number;
     timestamp?: number;
+    anotaciones?: string;
     client?: User;
     delivery?: User;
     address?: Address;

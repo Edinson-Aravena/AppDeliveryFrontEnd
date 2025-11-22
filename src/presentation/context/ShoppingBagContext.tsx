@@ -6,6 +6,8 @@ import { SaveShoppingBagUseCase } from "../../domain/useCases/shopping_bag/SaveS
 
 export interface ShoppingBagContextProps {
     shoppingBag: Product[],
+    anotaciones: string,
+    setAnotaciones: (notes: string) => void,
     getShoppingBag(): Promise<void>,
     saveItem(product: Product): Promise<void>,
     deleteItem(product: Product): Promise<void>,
@@ -20,6 +22,7 @@ export const ShoppingBagProvider = ({ children }: any) => {
 
     const [shoppingBag, setShoppingBag] = useState<Product[]>([]);
     const [total, setTotal] = useState(0.0);
+    const [anotaciones, setAnotaciones] = useState('');
 
     useEffect(() => {
         getShoppingBag();
@@ -85,12 +88,15 @@ export const ShoppingBagProvider = ({ children }: any) => {
         await SaveShoppingBagUseCase(emptyBag);
         setShoppingBag(emptyBag);
         setTotal(0);
+        setAnotaciones(''); // Limpiar anotaciones también
     }
 
     return (
         <ShoppingBagContext.Provider value={{
             shoppingBag,
             total,
+            anotaciones,
+            setAnotaciones,
             getTotal,
             getShoppingBag,
             saveItem,

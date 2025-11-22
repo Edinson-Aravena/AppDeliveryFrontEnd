@@ -51,7 +51,10 @@ export const ClientAddressListScreen = ({navigation, route}: Props | ProfileProp
                     
                     <TouchableOpacity 
                         style={styles.addButtonEmpty}
-                        onPress={() => navigation.navigate('ClientAddressCreateScreen' as any)}
+                        onPress={() => {
+                            const targetScreen = isFromCheckout ? 'ClientAddressCreateScreen' : 'ProfileAddressCreateScreen';
+                            navigation.navigate(targetScreen as any);
+                        }}
                     >
                         <IconComponent icon="add-circle" color="#fff" size={24} />
                         <Text style={styles.addButtonText}>Agregar dirección</Text>
@@ -79,7 +82,10 @@ export const ClientAddressListScreen = ({navigation, route}: Props | ProfileProp
                 <View style={styles.addButtonContainer}>
                     <TouchableOpacity 
                         style={styles.addButton}
-                        onPress={() => navigation.navigate('ClientAddressCreateScreen' as any)}
+                        onPress={() => {
+                            const targetScreen = isFromCheckout ? 'ClientAddressCreateScreen' : 'ProfileAddressCreateScreen';
+                            navigation.navigate(targetScreen as any);
+                        }}
                     >
                         <IconComponent icon="add-circle-outline" color={globalColors.buttons} size={22} />
                         <Text style={styles.addButtonTextSecondary}>Agregar nueva dirección</Text>

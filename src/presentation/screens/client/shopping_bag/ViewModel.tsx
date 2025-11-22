@@ -4,7 +4,7 @@ import { Product } from '../../../../domain/entities/Product';
 
 const ClientShoppingBagViewModel = () => {
 
-    const { shoppingBag, saveItem, deleteItem, total } = useContext(ShoppingBagContext)
+    const { shoppingBag, saveItem, deleteItem, total, anotaciones, setAnotaciones } = useContext(ShoppingBagContext)
 
     const addItem = async (product: Product) => {
         product.quantity = product.quantity! + 1;
@@ -21,6 +21,8 @@ const ClientShoppingBagViewModel = () => {
     return {
         shoppingBag,
         total,
+        anotaciones,
+        setAnotaciones,
         addItem,
         subtractItem,
         deleteItem,
