@@ -16,24 +16,31 @@ export const ClientProductDetailScreen = ({ navigation, route }: Props) => {
     const { product } = route.params;
     const width = Dimensions.get('window').width;
     const height = Dimensions.get('window').height;
+    const imageHeight = height * 0.45; // Altura para el carrusel de imágenes
     const { productImageList, price, addItem, removeItem, quantity, shoppingBag, addToBag } = useViewModel(product)
 
     return (
         <View style={styles.container}>
 
-            <GestureHandlerRootView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Carousel
-                    width={width}
-                    height={height}
-                    autoPlay={true}
-                    scrollAnimationDuration={3000}
-                    autoPlayInterval={2000}
-                    data={productImageList}
-                    renderItem={({ item }) => <Image
-                        source={{ uri: item }}
-                        style={styles.productImage} />
-                    }
-                />
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <View style={[styles.carouselContainer, { height: imageHeight }]}>
+                    <Carousel
+                        width={width}
+                        height={imageHeight}
+                        autoPlay={true}
+                        scrollAnimationDuration={3000}
+                        autoPlayInterval={2000}
+                        data={productImageList}
+                        renderItem={({ item }) => (
+                            <View style={styles.imageWrapper}>
+                                <Image
+                                    source={{ uri: item }}
+                                    style={styles.productImage} 
+                                />
+                            </View>
+                        )}
+                    />
+                </View>
             </GestureHandlerRootView>
 
             <View style={styles.productDetail}>
@@ -113,17 +120,28 @@ export const ClientProductDetailScreen = ({ navigation, route }: Props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000',
+        backgroundColor: '#f5f5f5',
+    },
+    carouselContainer: {
+        width: '100%',
+        backgroundColor: '#fff',
+    },
+    imageWrapper: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        padding: 10,
     },
     productImage: {
         width: '100%',
         height: '100%',
-        resizeMode: 'cover',
+        resizeMode: 'contain',
     },
     productDetail: {
         position: 'absolute',
         width: '100%',
-        height: '60%',
+        height: '58%',
         bottom: 0,
         backgroundColor: "#fff",
         borderTopLeftRadius: 30,

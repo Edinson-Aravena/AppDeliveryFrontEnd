@@ -86,7 +86,7 @@ export const ClientStackNavigator = () => {
                 <Stack.Screen
                     options={({ route, navigation }) => ({
                         title: 'Mis direcciones',
-                        headerShown: true,
+                        headerShown: false,
                         
                         headerRight: () => (
                             <TouchableOpacity

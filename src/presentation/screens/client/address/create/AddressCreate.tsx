@@ -22,14 +22,8 @@ export const ClientAddresstCreateScreen = ({ navigation, route }: Props | Profil
         if (responseMessage) {
             ToastAndroid.show(responseMessage, ToastAndroid.SHORT);
             if (responseMessage === 'La dirección se creo correctamente') {
-                const targetScreen = route.name === 'ClientAddressCreateScreen' 
-                    ? 'ClientAddressListScreen' 
-                    : 'ProfileAddressListScreen';
-                
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: targetScreen as any }],
-                });
+                // Simplemente volver atrás en lugar de resetear toda la navegación
+                navigation.goBack();
             }
         }
     }, [responseMessage]);
@@ -106,7 +100,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-end',
-        marginTop: "25%"
     },
     form: {
         width: '100%',

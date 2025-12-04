@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect } from 'react'
-import { View, FlatList, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native'
+import React, { useEffect } from 'react'
+import { View, FlatList, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native'
 import useViewModel from './ViewModel'
 import { AddressListItem } from './Item'
 import { ToastAndroid } from 'react-native'
@@ -9,7 +9,6 @@ import { ClientStackParamList } from '../../../../navigator/ClientStackNavigator
 import { ProfileStackParamList } from '../../../../navigator/ProfileStackNavigator';
 import { IconComponent } from '../../../../components';
 import { globalColors } from '../../../../theme/GlobalTheme';
-import { useFocusEffect } from '@react-navigation/native';
 
 interface Props extends StackScreenProps<ClientStackParamList, 'ClientAddressListScreen'>{}
 interface ProfileProps extends StackScreenProps<ProfileStackParamList, 'ProfileAddressListScreen'>{}
@@ -18,13 +17,6 @@ interface ProfileProps extends StackScreenProps<ProfileStackParamList, 'ProfileA
 export const ClientAddressListScreen = ({navigation, route}: Props | ProfileProps) => {
 
     const {address, checked, responseMessage, getAddress, changeRadioValue, createOrder, deleteAddress } = useViewModel()
-
-    // Recargar direcciones cada vez que la pantalla vuelve a estar en foco
-    useFocusEffect(
-        useCallback(() => {
-            getAddress();
-        }, [])
-    );
 
     useEffect(() => {
         if(responseMessage !== '') {
@@ -36,12 +28,7 @@ export const ClientAddressListScreen = ({navigation, route}: Props | ProfileProp
     const isFromCheckout = route.name === 'ClientAddressListScreen';
 
     return (
-        <View style={styles.container}>
-            <StatusBar 
-                backgroundColor={globalColors.buttons}
-                barStyle="light-content"
-                translucent={false}
-            />
+        <SafeAreaView style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
                 <View style={styles.headerContent}>
@@ -115,7 +102,7 @@ export const ClientAddressListScreen = ({navigation, route}: Props | ProfileProp
                     />
                 </View>
             )}
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -232,5 +219,3 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
 });
-
-
